@@ -223,6 +223,50 @@ function Is-ProgramInstalled {
     return $false
 }
 
+# --- Install or Uninstall prompt (moved to top) ---
+do {
+    $mainAction = Read-Host "`nWould you like to (I)nstall or (U)ninstall software? (I/U)"
+} while ($mainAction -notmatch '^(I|U)$')
+
+if ($mainAction -eq 'U') {
+    # Gather all programs that are installed via Chocolatey
+    $installedViaChoco = @()
+    foreach ($prog in $programs) {
+        $pkg = choco list --local-only --exact $prog.ChocoName 2>$null | Select-String "^$($prog.ChocoName) "
+        if ($pkg -ne $null) {
+            $installedViaChoco += $prog
+        }
+    }
+    if ($installedViaChoco.Count -eq 0) {
+        Write-Host "`nNo managed software found to uninstall." -ForegroundColor Yellow
+        Write-Host "`nPress any key to exit..."
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        exit 0
+    }
+    Write-Host "`nInstalled software managed by this script:" -ForegroundColor Cyan
+    for ($i = 0; $i -lt $installedViaChoco.Count; $i++) {
+        Write-Host "$($i+1). $($installedViaChoco[$i].Name)"
+    }
+    do {
+        $uninstallChoice = Read-Host "Enter the number of the software you want to uninstall (or 'C' to cancel)"
+        if ($uninstallChoice -match '^[Cc]$') {
+            Write-Host "Uninstall cancelled."
+            Write-Host "`nPress any key to exit..."
+            $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            exit 0
+        }
+        $validUninstall = $uninstallChoice -match '^\d+$' -and [int]$uninstallChoice -ge 1 -and [int]$uninstallChoice -le $installedViaChoco.Count
+    } while (-not $validUninstall)
+    $selectedUninstall = $installedViaChoco[[int]$uninstallChoice - 1]
+    Write-Host "`nUninstalling $($selectedUninstall.Name)..."
+    choco uninstall $($selectedUninstall.ChocoName) -y
+    Write-Host "`nUninstallation complete!" -ForegroundColor Green
+    Write-Host "`nPress any key to exit..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    exit 0
+}
+# --- End install/uninstall prompt (moved to top) ---
+
 # Step 1: Ensure Chocolatey is installed
 if (-not (Is-ChocolateyInstalled)) {
     Install-Chocolatey
@@ -325,47 +369,3 @@ foreach ($prog in $toInstall) {
 Write-Host "`nInstallation complete!" -ForegroundColor Green
 Write-Host "`nPress any key to exit..."
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-
-# --- Install or Uninstall prompt ---
-do {
-    $mainAction = Read-Host "`nWould you like to (I)nstall or (U)ninstall software? (I/U)"
-} while ($mainAction -notmatch '^(I|U)$')
-
-if ($mainAction -eq 'U') {
-    # Gather all programs that are installed via Chocolatey
-    $installedViaChoco = @()
-    foreach ($prog in $programs) {
-        $pkg = choco list --local-only --exact $prog.ChocoName 2>$null | Select-String "^$($prog.ChocoName) "
-        if ($pkg -ne $null) {
-            $installedViaChoco += $prog
-        }
-    }
-    if ($installedViaChoco.Count -eq 0) {
-        Write-Host "`nNo managed software found to uninstall." -ForegroundColor Yellow
-        Write-Host "`nPress any key to exit..."
-        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-        exit 0
-    }
-    Write-Host "`nInstalled software managed by this script:" -ForegroundColor Cyan
-    for ($i = 0; $i -lt $installedViaChoco.Count; $i++) {
-        Write-Host "$($i+1). $($installedViaChoco[$i].Name)"
-    }
-    do {
-        $uninstallChoice = Read-Host "Enter the number of the software you want to uninstall (or 'C' to cancel)"
-        if ($uninstallChoice -match '^[Cc]$') {
-            Write-Host "Uninstall cancelled."
-            Write-Host "`nPress any key to exit..."
-            $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-            exit 0
-        }
-        $validUninstall = $uninstallChoice -match '^\d+$' -and [int]$uninstallChoice -ge 1 -and [int]$uninstallChoice -le $installedViaChoco.Count
-    } while (-not $validUninstall)
-    $selectedUninstall = $installedViaChoco[[int]$uninstallChoice - 1]
-    Write-Host "`nUninstalling $($selectedUninstall.Name)..."
-    choco uninstall $($selectedUninstall.ChocoName) -y
-    Write-Host "`nUninstallation complete!" -ForegroundColor Green
-    Write-Host "`nPress any key to exit..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    exit 0
-}
-# --- End install/uninstall prompt ---
