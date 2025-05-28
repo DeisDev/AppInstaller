@@ -1,6 +1,7 @@
+$scriptVersion = "v0.3.0a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
-Write-Host "v0.2.9a" -ForegroundColor DarkGray
+Write-Host $scriptVersion -ForegroundColor DarkGray
 Write-Host "Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0" -ForegroundColor DarkGray
 Write-Host "=============================================" -ForegroundColor DarkGray
 
@@ -18,17 +19,42 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 $repoRawUrl = "https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1"
 $localScript = $MyInvocation.MyCommand.Definition
 
-# Only run self-update if script is running from a file
-if (Test-Path $localScript) {
+function Get-VersionStringFromContent {
+    param($content)
+    if ($content -match '\$scriptVersion\s*=\s*"(.*?)"') {
+        return $matches[1]
+    }
+    return $null
+}
+
+# Only run self-update if script is running from a file or from GitHub
+if ($localScript -or $MyInvocation.MyCommand.Path) {
     try {
         $remoteScript = Invoke-WebRequest -Uri $repoRawUrl -UseBasicParsing
         if ($remoteScript.StatusCode -eq 200) {
-            $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteScript.Content))) -Algorithm SHA256).Hash
-            $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
-            if ($remoteHash -ne $localHash) {
+            $remoteContent = $remoteScript.Content
+            $remoteVersion = Get-VersionStringFromContent $remoteContent
+            $localContent = Get-Content $localScript -Raw
+            $localVersion = Get-VersionStringFromContent $localContent
+
+            $needsUpdate = $false
+            if ($remoteVersion -and $localVersion) {
+                if ($remoteVersion -ne $localVersion) {
+                    $needsUpdate = $true
+                }
+            } else {
+                # Fallback to hash comparison if version string missing
+                $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteContent))) -Algorithm SHA256).Hash
+                $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
+                if ($remoteHash -ne $localHash) {
+                    $needsUpdate = $true
+                }
+            }
+
+            if ($needsUpdate) {
                 Write-Host "`nA new version of this script is available. Downloading and re-running..." -ForegroundColor Cyan
                 $tempScript = [System.IO.Path]::GetTempFileName() + ".ps1"
-                [System.IO.File]::WriteAllText($tempScript, $remoteScript.Content)
+                [System.IO.File]::WriteAllText($tempScript, $remoteContent)
                 & powershell -ExecutionPolicy Bypass -File $tempScript
                 exit $LASTEXITCODE
             }
