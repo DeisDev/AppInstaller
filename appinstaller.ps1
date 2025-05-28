@@ -4,21 +4,25 @@
 # --- Self-updating section ---
 $repoRawUrl = "https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1"
 $localScript = $MyInvocation.MyCommand.Definition
-try {
-    $remoteScript = Invoke-WebRequest -Uri $repoRawUrl -UseBasicParsing
-    if ($remoteScript.StatusCode -eq 200) {
-        $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteScript.Content))) -Algorithm SHA256).Hash
-        $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
-        if ($remoteHash -ne $localHash) {
-            Write-Host "`nA new version of this script is available. Downloading and re-running..." -ForegroundColor Cyan
-            $tempScript = [System.IO.Path]::GetTempFileName() + ".ps1"
-            [System.IO.File]::WriteAllText($tempScript, $remoteScript.Content)
-            & powershell -ExecutionPolicy Bypass -File $tempScript
-            exit $LASTEXITCODE
+
+# Only run self-update if script is running from a file
+if (Test-Path $localScript) {
+    try {
+        $remoteScript = Invoke-WebRequest -Uri $repoRawUrl -UseBasicParsing
+        if ($remoteScript.StatusCode -eq 200) {
+            $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteScript.Content))) -Algorithm SHA256).Hash
+            $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
+            if ($remoteHash -ne $localHash) {
+                Write-Host "`nA new version of this script is available. Downloading and re-running..." -ForegroundColor Cyan
+                $tempScript = [System.IO.Path]::GetTempFileName() + ".ps1"
+                [System.IO.File]::WriteAllText($tempScript, $remoteScript.Content)
+                & powershell -ExecutionPolicy Bypass -File $tempScript
+                exit $LASTEXITCODE
+            }
         }
+    } catch {
+        Write-Host "Unable to check for script updates: $_" -ForegroundColor Yellow
     }
-} catch {
-    Write-Host "Unable to check for script updates: $_" -ForegroundColor Yellow
 }
 # --- End self-updating section ---
 
