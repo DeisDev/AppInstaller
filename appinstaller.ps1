@@ -1,6 +1,6 @@
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
-Write-Host "v0.2.7a" -ForegroundColor DarkGray
+Write-Host "v0.2.8a" -ForegroundColor DarkGray
 Write-Host "Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0" -ForegroundColor DarkGray
 Write-Host "=============================================" -ForegroundColor DarkGray
 
@@ -229,9 +229,10 @@ do {
 } while ($mainAction -notmatch '^(I|U)$')
 
 if ($mainAction -eq 'U') {
-    # Gather all programs that are installed via Chocolatey
+    # Gather all programs that are installed via Chocolatey, including browsers
     $installedViaChoco = @()
-    foreach ($prog in $programs) {
+    $allUninstallables = $programs + $webBrowsers
+    foreach ($prog in $allUninstallables) {
         $pkg = choco list --local-only --exact $prog.ChocoName 2>$null | Select-String "^$($prog.ChocoName) "
         if ($pkg -ne $null) {
             $installedViaChoco += $prog
