@@ -62,7 +62,8 @@ $programs = @(
         ChocoName = "prismlauncher"
         Paths = @(
             "C:\Program Files\Prism Launcher\prismlauncher.exe",
-            "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe"
+            "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe",
+            "C:\Users\$env:USERNAME\Local\Programs\PrismLauncher\prismlauncher.exe"
         )
     },
     @{
@@ -87,7 +88,8 @@ $programs = @(
         Paths = @(
             "$env:LOCALAPPDATA\Microsoft\WindowsApps\TranslucentTB.exe",
             "C:\Program Files\TranslucentTB\TranslucentTB.exe",
-            "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe"
+            "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe",
+            "C:\Program Files\WindowsApps\28017CharlesMilette.TranslucentTB_2025.1.0.0_x64__v826wp6bftszj\TranslucentTB.exe"
         )
     },
     @{
