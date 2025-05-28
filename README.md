@@ -47,6 +47,22 @@ Edit the script to add or remove programs as needed.
 
 ---
 
+## 📋 Supported Programs
+
+The script currently checks for and can install the following programs:
+
+- Notepad++
+- Firefox
+- Steam
+- Discord
+- Prism Launcher
+- VLC
+- Epic Games Launcher
+- TranslucentTB
+- 7zip
+
+---
+
 ## 📄 License
 
 Personal use only. No warranty provided.
