@@ -1,4 +1,26 @@
-# Installs listed programs using Chocolatey if they are not already installed.
+# Install-Apps-With-Choco.ps1
+# PowerShell script to install selected applications, pulling latest script from GitHub on each run.
+
+# --- Self-updating section ---
+$repoRawUrl = "https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1"
+$localScript = $MyInvocation.MyCommand.Definition
+try {
+    $remoteScript = Invoke-WebRequest -Uri $repoRawUrl -UseBasicParsing
+    if ($remoteScript.StatusCode -eq 200) {
+        $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteScript.Content))) -Algorithm SHA256).Hash
+        $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
+        if ($remoteHash -ne $localHash) {
+            Write-Host "`nA new version of this script is available. Downloading and re-running..." -ForegroundColor Cyan
+            $tempScript = [System.IO.Path]::GetTempFileName() + ".ps1"
+            [System.IO.File]::WriteAllText($tempScript, $remoteScript.Content)
+            & powershell -ExecutionPolicy Bypass -File $tempScript
+            exit $LASTEXITCODE
+        }
+    }
+} catch {
+    Write-Host "Unable to check for script updates: $_" -ForegroundColor Yellow
+}
+# --- End self-updating section ---
 
 $programs = @(
     @{
@@ -23,6 +45,55 @@ $programs = @(
         Paths = @(
             "C:\Program Files (x86)\Steam\steam.exe"
         )
+    },
+    @{
+        Name = "Discord"
+        ChocoName = "discord"
+        Paths = @(
+            "$env:LOCALAPPDATA\Discord\Update.exe",
+            "C:\Program Files\Discord\Update.exe"
+        )
+    },
+    @{
+        Name = "Prism Launcher"
+        ChocoName = "prismlauncher"
+        Paths = @(
+            "C:\Program Files\Prism Launcher\prismlauncher.exe",
+            "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe"
+        )
+    },
+    @{
+        Name = "VLC"
+        ChocoName = "vlc"
+        Paths = @(
+            "C:\Program Files\VideoLAN\VLC\vlc.exe",
+            "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe"
+        )
+    },
+    @{
+        Name = "Epic Games Launcher"
+        ChocoName = "epicgameslauncher"
+        Paths = @(
+            "C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win32\EpicGamesLauncher.exe",
+            "C:\Program Files\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe"
+        )
+    },
+    @{
+        Name = "TranslucentTB"
+        ChocoName = "translucenttb"
+        Paths = @(
+            "$env:LOCALAPPDATA\Microsoft\WindowsApps\TranslucentTB.exe",
+            "C:\Program Files\TranslucentTB\TranslucentTB.exe",
+            "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe"
+        )
+    },
+    @{
+        Name = "7zip"
+        ChocoName = "7zip"
+        Paths = @(
+            "C:\Program Files\7-Zip\7zFM.exe",
+            "C:\Program Files (x86)\7-Zip\7zFM.exe"
+        )
     }
 )
 
@@ -41,7 +112,8 @@ function Is-ProgramInstalled {
     param($prog)
     # Path check
     foreach ($path in $prog.Paths) {
-        if (Test-Path $path) {
+        $expanded = [Environment]::ExpandEnvironmentVariables($path)
+        if (Test-Path $expanded) {
             return $true
         }
     }
