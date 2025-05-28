@@ -239,8 +239,8 @@ if ($mainAction -eq 'U') {
     }
     if ($installedViaChoco.Count -eq 0) {
         Write-Host "`nNo managed software found to uninstall." -ForegroundColor Yellow
-        Write-Host "`nPress any key to exit..."
-        Read-Host "Press Enter to exit..."
+        Write-Host "`nPress Enter to exit..."
+        Read-Host | Out-Null
         exit 0
     }
     Write-Host "`nInstalled software managed by this script:" -ForegroundColor Cyan
@@ -251,8 +251,8 @@ if ($mainAction -eq 'U') {
         $uninstallChoice = Read-Host "Enter the number of the software you want to uninstall (or 'C' to cancel)"
         if ($uninstallChoice -match '^[Cc]$') {
             Write-Host "Uninstall cancelled."
-            Write-Host "`nPress any key to exit..."
-            Read-Host "Press Enter to exit..."
+            Write-Host "`nPress Enter to exit..."
+            Read-Host | Out-Null
             exit 0
         }
         $validUninstall = $uninstallChoice -match '^\d+$' -and [int]$uninstallChoice -ge 1 -and [int]$uninstallChoice -le $installedViaChoco.Count
@@ -261,8 +261,16 @@ if ($mainAction -eq 'U') {
     Write-Host "`nUninstalling $($selectedUninstall.Name)..."
     choco uninstall $($selectedUninstall.ChocoName) -y
     Write-Host "`nUninstallation complete!" -ForegroundColor Green
-    Write-Host "`nPress any key to exit..."
-    Read-Host "Press Enter to exit..."
+
+    # Prompt to restart or exit after uninstall
+    do {
+        $restartChoice = Read-Host "`nType 'R' to return to the start, or press Enter to exit."
+        if ($restartChoice -match '^[Rr]$') {
+            & powershell -ExecutionPolicy Bypass -File $MyInvocation.MyCommand.Definition
+            exit $LASTEXITCODE
+        }
+    } while ($restartChoice -match '^[Rr]$' -eq $false -and $restartChoice -ne "")
+
     exit 0
 }
 # --- End install/uninstall prompt (moved to top) ---
@@ -340,8 +348,8 @@ foreach ($prog in $programs) {
 
 if ($toInstall.Count -eq 0) {
     Write-Host "`nAll programs are already installed. Nothing to do." -ForegroundColor Cyan
-    Write-Host "`nPress any key to exit..."
-    Read-Host "Press Enter to exit..."
+    Write-Host "`nPress Enter to exit..."
+    Read-Host | Out-Null
     exit 0
 }
 
@@ -355,8 +363,8 @@ do {
 
 if ($response -eq 'N') {
     Write-Host "Installation aborted by user." -ForegroundColor Red
-    Write-Host "`nPress any key to exit..."
-    Read-Host "Press Enter to exit..."
+    Write-Host "`nPress Enter to exit..."
+    Read-Host | Out-Null
     exit 0
 }
 
@@ -367,5 +375,16 @@ foreach ($prog in $toInstall) {
 }
 
 Write-Host "`nInstallation complete!" -ForegroundColor Green
-Write-Host "`nPress any key to exit..."
-Read-Host "Press Enter to exit..."
+
+# Prompt to restart or exit
+do {
+    $restartChoice = Read-Host "`nType 'R' to return to the start, or press Enter to exit."
+    if ($restartChoice -match '^[Rr]$') {
+        # Re-invoke the script
+        & powershell -ExecutionPolicy Bypass -File $MyInvocation.MyCommand.Definition
+        exit $LASTEXITCODE
+    }
+} while ($restartChoice -match '^[Rr]$' -eq $false -and $restartChoice -ne "")
+
+# If user just presses Enter, exit
+exit 0
