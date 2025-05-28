@@ -1,4 +1,4 @@
-Write-Host @"          .___                 __         .__  .__                
+Write-Host @'          .___                 __         .__  .__                
   /  _  \ ______ ______ |   | ____   _______/  |______  |  | |  |   ___________ 
  /  /_\  \\____ \\____ \|   |/    \ /  ___/\   __\__  \ |  | |  | _/ __ \_  __ \
 /    |    \  |_> >  |_> >   |   |  \\___ \  |  |  / __ \|  |_|  |_\  ___/|  | \/
@@ -10,7 +10,7 @@ ___.           ________         .__       ________
  | \_\ \___  |  |    `   \  ___/|  |\___ \ |    `   \  ___/\   /                
  |___  / ____| /_______  /\___  >__/____  >_______  /\___  >\_/                 
      \/\/              \/     \/        \/        \/     \/        
-"@
+'@
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host "v0.2.3" -ForegroundColor DarkGray
 Write-Host Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0
