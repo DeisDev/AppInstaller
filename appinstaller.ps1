@@ -63,7 +63,7 @@ $programs = @(
         Paths = @(
             "C:\Program Files\Prism Launcher\prismlauncher.exe",
             "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe",
-            "C:\Users\$env:USERNAME\Local\Programs\PrismLauncher\prismlauncher.exe"
+            "C:\Users\$env:USERNAME\AppData\Local\Programs\PrismLauncher\prismlauncher.exe"
         )
     },
     @{
