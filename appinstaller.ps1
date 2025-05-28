@@ -5,7 +5,7 @@ Write-Host $scriptVersion -ForegroundColor DarkGray
 Write-Host "Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0" -ForegroundColor DarkGray
 Write-Host "=============================================" -ForegroundColor DarkGray
 
-# Install-Apps-With-Choco.ps1
+# AppInstaller.ps1
 # PowerShell script to install selected applications, pulling latest script from GitHub on each run.
 
 # --- Admin check section ---
