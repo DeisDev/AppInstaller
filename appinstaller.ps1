@@ -1,6 +1,6 @@
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
-Write-Host "v0.2.6" -ForegroundColor DarkGray
+Write-Host "v0.2.7a -ForegroundColor DarkGray
 Write-Host "Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0" -ForegroundColor DarkGray
 Write-Host "=============================================" -ForegroundColor DarkGray
 
@@ -240,7 +240,7 @@ if ($mainAction -eq 'U') {
     if ($installedViaChoco.Count -eq 0) {
         Write-Host "`nNo managed software found to uninstall." -ForegroundColor Yellow
         Write-Host "`nPress any key to exit..."
-        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        Read-Host "Press Enter to exit..."
         exit 0
     }
     Write-Host "`nInstalled software managed by this script:" -ForegroundColor Cyan
@@ -252,7 +252,7 @@ if ($mainAction -eq 'U') {
         if ($uninstallChoice -match '^[Cc]$') {
             Write-Host "Uninstall cancelled."
             Write-Host "`nPress any key to exit..."
-            $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+            Read-Host "Press Enter to exit..."
             exit 0
         }
         $validUninstall = $uninstallChoice -match '^\d+$' -and [int]$uninstallChoice -ge 1 -and [int]$uninstallChoice -le $installedViaChoco.Count
@@ -262,7 +262,7 @@ if ($mainAction -eq 'U') {
     choco uninstall $($selectedUninstall.ChocoName) -y
     Write-Host "`nUninstallation complete!" -ForegroundColor Green
     Write-Host "`nPress any key to exit..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    Read-Host "Press Enter to exit..."
     exit 0
 }
 # --- End install/uninstall prompt (moved to top) ---
@@ -341,7 +341,7 @@ foreach ($prog in $programs) {
 if ($toInstall.Count -eq 0) {
     Write-Host "`nAll programs are already installed. Nothing to do." -ForegroundColor Cyan
     Write-Host "`nPress any key to exit..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    Read-Host "Press Enter to exit..."
     exit 0
 }
 
@@ -356,7 +356,7 @@ do {
 if ($response -eq 'N') {
     Write-Host "Installation aborted by user." -ForegroundColor Red
     Write-Host "`nPress any key to exit..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    Read-Host "Press Enter to exit..."
     exit 0
 }
 
@@ -368,4 +368,4 @@ foreach ($prog in $toInstall) {
 
 Write-Host "`nInstallation complete!" -ForegroundColor Green
 Write-Host "`nPress any key to exit..."
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Read-Host "Press Enter to exit..."
