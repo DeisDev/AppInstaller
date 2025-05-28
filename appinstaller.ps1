@@ -16,9 +16,6 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 # --- End admin check section ---
 
 # --- Self-updating section ---
-$repoRawUrl = "https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1"
-$localScript = $MyInvocation.MyCommand.Definition
-
 function Get-VersionStringFromContent {
     param($content)
     if ($content -match '\$scriptVersion\s*=\s*"(.*?)"') {
@@ -27,47 +24,47 @@ function Get-VersionStringFromContent {
     return $null
 }
 
-# Only run self-update if script is running from a file or from GitHub
-if ($localScript -or $MyInvocation.MyCommand.Path) {
+function Update-SelfIfNeeded {
+    $repoRawUrl = "https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1"
+    $localScript = $MyInvocation.MyCommand.Definition
+
+    # Only update if running from a file
+    if (-not (Test-Path $localScript -PathType Leaf)) {
+        return
+    }
+
     try {
-        $remoteScript = Invoke-WebRequest -Uri $repoRawUrl -UseBasicParsing
-        if ($remoteScript.StatusCode -eq 200) {
-            $remoteContent = $remoteScript.Content
-            $remoteVersion = Get-VersionStringFromContent $remoteContent
+        $remoteScript = Invoke-WebRequest -Uri $repoRawUrl -UseBasicParsing -ErrorAction Stop
+        if ($remoteScript.StatusCode -ne 200) {
+            Write-Host "Could not check for updates (HTTP $($remoteScript.StatusCode))." -ForegroundColor Yellow
+            return
+        }
+        $remoteContent = $remoteScript.Content
+        $remoteVersion = Get-VersionStringFromContent $remoteContent
 
-            # Check if $localScript is a valid file
-            if (Test-Path $localScript -PathType Leaf) {
-                # Use -Raw if supported (PowerShell 3+), else fallback
-                try {
-                    $localContent = Get-Content $localScript -Raw
-                } catch {
-                    $localContent = Get-Content $localScript | Out-String
-                }
+        try {
+            $localContent = Get-Content $localScript -Raw
+        } catch {
+            $localContent = Get-Content $localScript | Out-String
+        }
+        $localVersion = Get-VersionStringFromContent $localContent
+
+        if ($remoteVersion -and $localVersion) {
+            if ($remoteVersion -ne $localVersion) {
+                Write-Host "`nA new version ($remoteVersion) is available. Updating..." -ForegroundColor Cyan
+                $tempScript = [System.IO.Path]::GetTempFileName() + ".ps1"
+                [System.IO.File]::WriteAllText($tempScript, $remoteContent)
+                & powershell -ExecutionPolicy Bypass -File $tempScript
+                exit $LASTEXITCODE
             } else {
-                $localContent = ""
+                Write-Host "Script is up to date." -ForegroundColor Green
             }
-
-            $localVersion = Get-VersionStringFromContent $localContent
-
-            $needsUpdate = $false
-            if ($remoteVersion -and $localVersion) {
-                if ($remoteVersion -ne $localVersion) {
-                    $needsUpdate = $true
-                }
-            } else {
-                # Fallback to hash comparison if version string missing
-                $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteContent))) -Algorithm SHA256).Hash
-                $localHash = ""
-                if (Test-Path $localScript -PathType Leaf) {
-                    $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
-                }
-                if ($remoteHash -ne $localHash) {
-                    $needsUpdate = $true
-                }
-            }
-
-            if ($needsUpdate) {
-                Write-Host "`nA new version of this script is available. Downloading and re-running..." -ForegroundColor Cyan
+        } else {
+            # Fallback to hash comparison if version string missing
+            $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteContent))) -Algorithm SHA256).Hash
+            $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
+            if ($remoteHash -ne $localHash) {
+                Write-Host "`nA new version is available (hash mismatch). Updating..." -ForegroundColor Cyan
                 $tempScript = [System.IO.Path]::GetTempFileName() + ".ps1"
                 [System.IO.File]::WriteAllText($tempScript, $remoteContent)
                 & powershell -ExecutionPolicy Bypass -File $tempScript
@@ -80,6 +77,8 @@ if ($localScript -or $MyInvocation.MyCommand.Path) {
         Write-Host "Unable to check for script updates: $_" -ForegroundColor Yellow
     }
 }
+
+Update-SelfIfNeeded
 # --- End self-updating section ---
 
 $programs = @(
