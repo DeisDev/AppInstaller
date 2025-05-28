@@ -1,4 +1,4 @@
-$scriptVersion = "v0.3.2a"
+$scriptVersion = "v0.3.3a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
@@ -72,6 +72,8 @@ if ($localScript -or $MyInvocation.MyCommand.Path) {
                 [System.IO.File]::WriteAllText($tempScript, $remoteContent)
                 & powershell -ExecutionPolicy Bypass -File $tempScript
                 exit $LASTEXITCODE
+            } else {
+                Write-Host "Script is up to date." -ForegroundColor Green
             }
         }
     } catch {
