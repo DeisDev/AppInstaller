@@ -66,6 +66,9 @@ The script currently checks for and can install the following programs:
 - Opera GX
 - Opera
 - LibreWolf
+- Chromium
+- Tor Browser
+- Display Driver Uninstaller (DDU)
 
 ---
 
