@@ -324,7 +324,9 @@ $extrasPrograms = @(
         ChocoName = "ea-app"
         Paths = @(
             "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop.exe",
-            "C:\Program Files\EA Games\EA Desktop\EA Desktop.exe"
+            "C:\Program Files\EA Games\EA Desktop\EA Desktop.exe",
+            "C:\Users\$env:USERNAME\AppData\Local\EADesktop\EA Desktop.exe",
+            "C:\Users\$env:USERNAME\AppData\Roaming\EADesktop\EA Desktop.exe"
         )
     },
     @{
