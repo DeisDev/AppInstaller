@@ -1,8 +1,25 @@
-$scriptVersion = "v0.3.3a"
+$scriptVersion = "v0.3.4a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
 Write-Host "Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0" -ForegroundColor DarkGray
+
+# --- System Information ---
+$os = Get-CimInstance Win32_OperatingSystem
+$winVer = $os.Caption + " " + $os.Version
+$arch = if ([Environment]::Is64BitOperatingSystem) { "64-bit" } else { "32-bit" }
+$netAdapters = Get-NetConnectionProfile -ErrorAction SilentlyContinue
+if ($netAdapters) {
+    $connType = ($netAdapters | Where-Object { $_.IPv4Connectivity -eq "Internet" } | Select-Object -First 1).NetworkCategory
+    if (-not $connType) { $connType = $netAdapters[0].NetworkCategory }
+} else {
+    $connType = "Unknown"
+}
+Write-Host ("Windows Version: $winVer") -ForegroundColor DarkGray
+Write-Host ("Architecture: $arch") -ForegroundColor DarkGray
+Write-Host ("Connection Type: $connType") -ForegroundColor DarkGray
+# --- End System Information ---
+
 Write-Host "=============================================" -ForegroundColor DarkGray
 
 # AppInstaller.ps1
