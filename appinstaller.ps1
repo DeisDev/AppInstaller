@@ -198,6 +198,27 @@ if (-not (Is-ChocolateyInstalled)) {
     Write-Host "Chocolatey is already installed."
 }
 
+# --- Prompt for web browser installation ---
+Write-Host "`nWould you like to install a web browser?" -ForegroundColor Cyan
+do {
+    $browserPrompt = Read-Host "Install a web browser? (Y/N)"
+} while ($browserPrompt -notmatch '^(Y|N)$')
+
+if ($browserPrompt -eq 'Y') {
+    Write-Host "`nAvailable browsers:" -ForegroundColor Cyan
+    for ($i = 0; $i -lt $webBrowsers.Count; $i++) {
+        Write-Host "$($i+1). $($webBrowsers[$i].Name)"
+    }
+    do {
+        $browserChoice = Read-Host "Enter the number of the browser you want to install"
+        $valid = $browserChoice -match '^\d+$' -and [int]$browserChoice -ge 1 -and [int]$browserChoice -le $webBrowsers.Count
+    } while (-not $valid)
+    $selectedBrowser = $webBrowsers[[int]$browserChoice - 1]
+    $programs += $selectedBrowser
+    Write-Host "`n$($selectedBrowser.Name) will be included in the installation list." -ForegroundColor Green
+}
+# --- End browser prompt ---
+
 # Step 2: Check for already installed programs
 Write-Host "`nChecking for installed programs..."
 $toInstall = @()
@@ -236,24 +257,3 @@ foreach ($prog in $toInstall) {
 }
 
 Write-Host "`nInstallation complete!" -ForegroundColor Green
-
-# --- Prompt for web browser installation ---
-Write-Host "`nWould you like to install a web browser?" -ForegroundColor Cyan
-do {
-    $browserPrompt = Read-Host "Install a web browser? (Y/N)"
-} while ($browserPrompt -notmatch '^(Y|N)$')
-
-if ($browserPrompt -eq 'Y') {
-    Write-Host "`nAvailable browsers:" -ForegroundColor Cyan
-    for ($i = 0; $i -lt $webBrowsers.Count; $i++) {
-        Write-Host "$($i+1). $($webBrowsers[$i].Name)"
-    }
-    do {
-        $browserChoice = Read-Host "Enter the number of the browser you want to install"
-        $valid = $browserChoice -match '^\d+$' -and [int]$browserChoice -ge 1 -and [int]$browserChoice -le $webBrowsers.Count
-    } while (-not $valid)
-    $selectedBrowser = $webBrowsers[[int]$browserChoice - 1]
-    $programs += $selectedBrowser
-    Write-Host "`n$($selectedBrowser.Name) will be included in the installation list." -ForegroundColor Green
-}
-# --- End browser prompt ---
