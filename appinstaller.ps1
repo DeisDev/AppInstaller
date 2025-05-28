@@ -1,4 +1,4 @@
-$scriptVersion = "v0.3.4a"
+$scriptVersion = "v0.3.5a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
@@ -326,7 +326,8 @@ $extrasPrograms = @(
             "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop.exe",
             "C:\Program Files\EA Games\EA Desktop\EA Desktop.exe",
             "C:\Users\$env:USERNAME\AppData\Local\EADesktop\EA Desktop.exe",
-            "C:\Users\$env:USERNAME\AppData\Roaming\EADesktop\EA Desktop.exe"
+            "C:\Users\$env:USERNAME\AppData\Roaming\EADesktop\EA Desktop.exe",
+            "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop\EADesktop.exe"
         )
     },
     @{
