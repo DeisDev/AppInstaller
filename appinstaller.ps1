@@ -43,14 +43,6 @@ $programs = @(
         )
     },
     @{
-        Name = "Firefox"
-        ChocoName = "firefox"
-        Paths = @(
-            "C:\Program Files\Mozilla Firefox\firefox.exe",
-            "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-        )
-    },
-    @{
         Name = "Steam"
         ChocoName = "steam"
         Paths = @(
@@ -107,6 +99,65 @@ $programs = @(
         )
     }
 )
+
+# --- Web browsers definitions ---
+$webBrowsers = @(
+    @{
+        Name = "Edge"
+        ChocoName = "microsoft-edge"
+        Paths = @(
+            "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+            "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+        )
+    },
+    @{
+        Name = "Chrome"
+        ChocoName = "googlechrome"
+        Paths = @(
+            "C:\Program Files\Google\Chrome\Application\chrome.exe",
+            "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+        )
+    },
+    @{
+        Name = "Brave"
+        ChocoName = "brave"
+        Paths = @(
+            "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe",
+            "C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe"
+        )
+    },
+    @{
+        Name = "Firefox"
+        ChocoName = "firefox"
+        Paths = @(
+            "C:\Program Files\Mozilla Firefox\firefox.exe",
+            "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+        )
+    },
+    @{
+        Name = "Opera GX"
+        ChocoName = "opera-gx"
+        Paths = @(
+            "C:\Users\$env:USERNAME\AppData\Local\Programs\Opera GX\opera.exe"
+        )
+    },
+    @{
+        Name = "Opera"
+        ChocoName = "opera"
+        Paths = @(
+            "C:\Users\$env:USERNAME\AppData\Local\Programs\Opera\opera.exe"
+        )
+    },
+    @{
+        Name = "LibreWolf"
+        ChocoName = "librewolf"
+        Paths = @(
+            "C:\Program Files\LibreWolf\librewolf.exe",
+            "C:\Program Files (x86)\LibreWolf\librewolf.exe"
+        )
+    }
+)
+# --- End web browsers definitions ---
 
 function Is-ChocolateyInstalled {
     return (Get-Command choco.exe -ErrorAction SilentlyContinue) -ne $null
@@ -185,3 +236,24 @@ foreach ($prog in $toInstall) {
 }
 
 Write-Host "`nInstallation complete!" -ForegroundColor Green
+
+# --- Prompt for web browser installation ---
+Write-Host "`nWould you like to install a web browser?" -ForegroundColor Cyan
+do {
+    $browserPrompt = Read-Host "Install a web browser? (Y/N)"
+} while ($browserPrompt -notmatch '^(Y|N)$')
+
+if ($browserPrompt -eq 'Y') {
+    Write-Host "`nAvailable browsers:" -ForegroundColor Cyan
+    for ($i = 0; $i -lt $webBrowsers.Count; $i++) {
+        Write-Host "$($i+1). $($webBrowsers[$i].Name)"
+    }
+    do {
+        $browserChoice = Read-Host "Enter the number of the browser you want to install"
+        $valid = $browserChoice -match '^\d+$' -and [int]$browserChoice -ge 1 -and [int]$browserChoice -le $webBrowsers.Count
+    } while (-not $valid)
+    $selectedBrowser = $webBrowsers[[int]$browserChoice - 1]
+    $programs += $selectedBrowser
+    Write-Host "`n$($selectedBrowser.Name) will be included in the installation list." -ForegroundColor Green
+}
+# --- End browser prompt ---
