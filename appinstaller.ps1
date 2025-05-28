@@ -1,6 +1,13 @@
 # Install-Apps-With-Choco.ps1
 # PowerShell script to install selected applications, pulling latest script from GitHub on each run.
 
+# --- Admin check section ---
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host "`nThis script must be run as Administrator. Please right-click PowerShell and select 'Run as administrator'." -ForegroundColor Red
+    exit 1
+}
+# --- End admin check section ---
+
 # --- Self-updating section ---
 $repoRawUrl = "https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1"
 $localScript = $MyInvocation.MyCommand.Definition
