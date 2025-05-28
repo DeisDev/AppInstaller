@@ -1,4 +1,4 @@
-$scriptVersion = "v0.3.1a"
+$scriptVersion = "v0.3.2a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
@@ -34,7 +34,19 @@ if ($localScript -or $MyInvocation.MyCommand.Path) {
         if ($remoteScript.StatusCode -eq 200) {
             $remoteContent = $remoteScript.Content
             $remoteVersion = Get-VersionStringFromContent $remoteContent
-            $localContent = Get-Content $localScript -Raw
+
+            # Check if $localScript is a valid file
+            if (Test-Path $localScript -PathType Leaf) {
+                # Use -Raw if supported (PowerShell 3+), else fallback
+                try {
+                    $localContent = Get-Content $localScript -Raw
+                } catch {
+                    $localContent = Get-Content $localScript | Out-String
+                }
+            } else {
+                $localContent = ""
+            }
+
             $localVersion = Get-VersionStringFromContent $localContent
 
             $needsUpdate = $false
@@ -45,7 +57,10 @@ if ($localScript -or $MyInvocation.MyCommand.Path) {
             } else {
                 # Fallback to hash comparison if version string missing
                 $remoteHash = (Get-FileHash -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($remoteContent))) -Algorithm SHA256).Hash
-                $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
+                $localHash = ""
+                if (Test-Path $localScript -PathType Leaf) {
+                    $localHash = (Get-FileHash $localScript -Algorithm SHA256).Hash
+                }
                 if ($remoteHash -ne $localHash) {
                     $needsUpdate = $true
                 }
