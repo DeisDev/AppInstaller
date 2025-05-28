@@ -236,6 +236,8 @@ foreach ($prog in $programs) {
 
 if ($toInstall.Count -eq 0) {
     Write-Host "`nAll programs are already installed. Nothing to do." -ForegroundColor Cyan
+    Write-Host "`nPress any key to exit..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     exit 0
 }
 
@@ -249,6 +251,8 @@ do {
 
 if ($response -eq 'N') {
     Write-Host "Installation aborted by user." -ForegroundColor Red
+    Write-Host "`nPress any key to exit..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     exit 0
 }
 
@@ -259,3 +263,5 @@ foreach ($prog in $toInstall) {
 }
 
 Write-Host "`nInstallation complete!" -ForegroundColor Green
+Write-Host "`nPress any key to exit..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
