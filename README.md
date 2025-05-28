@@ -4,6 +4,8 @@ A **very simple PowerShell script** that checks for and installs programs using 
 
 > ⚠️ _**Disclaimer:** This project is mainly intended for my private use. It is not designed or maintained as a general-purpose solution. I will **not** be accepting pull requests or issues. Please feel free to fork or adapt the script for your own needs, but official support or contributions will not be provided._
 
+> 💡 _**Intended Use:** This script is primarily designed for quickly setting up fresh installs of Windows or new PCs._
+
 ---
 
 ## 🚀 Features
