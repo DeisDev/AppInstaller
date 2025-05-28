@@ -31,6 +31,12 @@ A **very simple PowerShell script** that checks for and installs programs using 
    .\AppInstaller.ps1
    ```
 
+   **Or run directly from GitHub (no download needed):**
+
+   ```powershell
+   irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
+   ```
+
 4. **Follow the prompts.**
 
 ---
