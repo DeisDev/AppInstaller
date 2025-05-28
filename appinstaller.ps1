@@ -241,17 +241,32 @@ do {
 } while ($browserPrompt -notmatch '^(Y|N)$')
 
 if ($browserPrompt -eq 'Y') {
-    Write-Host "`nAvailable browsers:" -ForegroundColor Cyan
-    for ($i = 0; $i -lt $webBrowsers.Count; $i++) {
-        Write-Host "$($i+1). $($webBrowsers[$i].Name)"
-    }
-    do {
-        $browserChoice = Read-Host "Enter the number of the browser you want to install"
+    :browserSelectLoop while ($true) {
+        Write-Host "`nAvailable browsers:" -ForegroundColor Cyan
+        for ($i = 0; $i -lt $webBrowsers.Count; $i++) {
+            Write-Host "$($i+1). $($webBrowsers[$i].Name)"
+        }
+        Write-Host "C. Cancel and go back"
+        $browserChoice = Read-Host "Enter the number of the browser you want to install, or 'C' to cancel"
+        if ($browserChoice -match '^[Cc]$') {
+            # Go back to the previous prompt
+            do {
+                $browserPrompt = Read-Host "Install a web browser? (Y/N)"
+            } while ($browserPrompt -notmatch '^(Y|N)$')
+            if ($browserPrompt -eq 'Y') {
+                continue browserSelectLoop
+            } else {
+                break
+            }
+        }
         $valid = $browserChoice -match '^\d+$' -and [int]$browserChoice -ge 1 -and [int]$browserChoice -le $webBrowsers.Count
-    } while (-not $valid)
-    $selectedBrowser = $webBrowsers[[int]$browserChoice - 1]
-    $programs += $selectedBrowser
-    Write-Host "`n$($selectedBrowser.Name) will be included in the installation list." -ForegroundColor Green
+        if ($valid) {
+            $selectedBrowser = $webBrowsers[[int]$browserChoice - 1]
+            $programs += $selectedBrowser
+            Write-Host "`n$($selectedBrowser.Name) will be included in the installation list." -ForegroundColor Green
+            break
+        }
+    }
 }
 # --- End browser prompt ---
 
