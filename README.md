@@ -60,6 +60,12 @@ The script currently checks for and can install the following programs:
 - Epic Games Launcher
 - TranslucentTB
 - 7zip
+- Edge
+- Chrome
+- Brave
+- Opera GX
+- Opera
+- LibreWolf
 
 ---
 
