@@ -197,6 +197,67 @@ $dduProgram = @{
 }
 # --- End DDU definition ---
 
+# --- VPN definitions ---
+$vpnPrograms = @(
+    @{
+        Name = "NordVPN"
+        ChocoName = "nordvpn"
+        Paths = @(
+            "C:\Program Files\NordVPN\NordVPN.exe",
+            "C:\Program Files (x86)\NordVPN\NordVPN.exe"
+        )
+    },
+    @{
+        Name = "ProtonVPN"
+        ChocoName = "protonvpn"
+        Paths = @(
+            "C:\Program Files\Proton Technologies\ProtonVPN\ProtonVPN.exe",
+            "C:\Program Files (x86)\Proton Technologies\ProtonVPN\ProtonVPN.exe"
+        )
+    },
+    @{
+        Name = "WireGuard"
+        ChocoName = "wireguard"
+        Paths = @(
+            "C:\Program Files\WireGuard\wireguard.exe",
+            "C:\Program Files (x86)\WireGuard\wireguard.exe"
+        )
+    },
+    @{
+        Name = "OpenVPN"
+        ChocoName = "openvpn"
+        Paths = @(
+            "C:\Program Files\OpenVPN\bin\openvpn.exe",
+            "C:\Program Files (x86)\OpenVPN\bin\openvpn.exe"
+        )
+    },
+    @{
+        Name = "OpenVPN Connect"
+        ChocoName = "openvpn-connect"
+        Paths = @(
+            "C:\Program Files\OpenVPN Connect\OpenVPNConnect.exe",
+            "C:\Program Files (x86)\OpenVPN Connect\OpenVPNConnect.exe"
+        )
+    },
+    @{
+        Name = "ExpressVPN"
+        ChocoName = "expressvpn"
+        Paths = @(
+            "C:\Program Files (x86)\ExpressVPN\expressvpn-ui\ExpressVPN.exe",
+            "C:\Program Files\ExpressVPN\expressvpn-ui\ExpressVPN.exe"
+        )
+    },
+    @{
+        Name = "Mullvad"
+        ChocoName = "mullvad-vpn"
+        Paths = @(
+            "C:\Program Files\Mullvad VPN\mullvad.exe",
+            "C:\Program Files (x86)\Mullvad VPN\mullvad.exe"
+        )
+    }
+)
+# --- End VPN definitions ---
+
 function Is-ChocolateyInstalled {
     return (Get-Command choco.exe -ErrorAction SilentlyContinue) -ne $null
 }
@@ -282,6 +343,41 @@ if ($dduPrompt -eq 'Y') {
     Write-Host "`nDisplay Driver Uninstaller (DDU) will be included in the installation list." -ForegroundColor Green
 }
 # --- End DDU prompt ---
+
+# --- Prompt for VPN installation ---
+Write-Host "`nWould you like to install a VPN?" -ForegroundColor Cyan
+do {
+    $vpnPrompt = Read-Host "Install a VPN? (Y/N)"
+} while ($vpnPrompt -notmatch '^(Y|N)$')
+
+if ($vpnPrompt -eq 'Y') {
+    :vpnSelectLoop while ($true) {
+        Write-Host "`nAvailable VPNs:" -ForegroundColor Cyan
+        for ($i = 0; $i -lt $vpnPrograms.Count; $i++) {
+            Write-Host "$($i+1). $($vpnPrograms[$i].Name)"
+        }
+        $vpnChoice = Read-Host "Enter the number of the VPN you want to install, or 'C' to cancel"
+        if ($vpnChoice -match '^[Cc]$') {
+            # Go back to the previous prompt
+            do {
+                $vpnPrompt = Read-Host "Install a VPN? (Y/N)"
+            } while ($vpnPrompt -notmatch '^(Y|N)$')
+            if ($vpnPrompt -eq 'Y') {
+                continue vpnSelectLoop
+            } else {
+                break
+            }
+        }
+        $validVpn = $vpnChoice -match '^\d+$' -and [int]$vpnChoice -ge 1 -and [int]$vpnChoice -le $vpnPrograms.Count
+        if ($validVpn) {
+            $selectedVpn = $vpnPrograms[[int]$vpnChoice - 1]
+            $programs += $selectedVpn
+            Write-Host "`n$($selectedVpn.Name) will be included in the installation list." -ForegroundColor Green
+            break
+        }
+    }
+}
+# --- End VPN prompt ---
 
 # Step 2: Check for already installed programs
 Write-Host "`nChecking for installed programs..."
