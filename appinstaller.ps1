@@ -1,6 +1,6 @@
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
-Write-Host "v0.2.3" -ForegroundColor DarkGray
+Write-Host "v0.2.5" -ForegroundColor DarkGray
 Write-Host "Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0" -ForegroundColor DarkGray
 Write-Host "=============================================" -ForegroundColor DarkGray
 
