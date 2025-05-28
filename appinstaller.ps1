@@ -1,4 +1,4 @@
-$scriptVersion = "v0.3.0a"
+$scriptVersion = "v0.3.1a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
@@ -284,6 +284,51 @@ $vpnPrograms = @(
 )
 # --- End VPN definitions ---
 
+# --- Extras definitions ---
+$extrasPrograms = @(
+    @{
+        Name = "EA App"
+        ChocoName = "ea-app"
+        Paths = @(
+            "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop.exe",
+            "C:\Program Files\EA Games\EA Desktop\EA Desktop.exe"
+        )
+    },
+    @{
+        Name = "GOG Galaxy"
+        ChocoName = "gog-galaxy"
+        Paths = @(
+            "C:\Program Files (x86)\GOG Galaxy\GalaxyClient.exe",
+            "C:\Program Files\GOG Galaxy\GalaxyClient.exe"
+        )
+    },
+    @{
+        Name = "Rockstar Games Launcher"
+        ChocoName = "rockstar-launcher"
+        Paths = @(
+            "C:\Program Files\Rockstar Games\Launcher\Launcher.exe",
+            "C:\Program Files (x86)\Rockstar Games\Launcher\Launcher.exe"
+        )
+    },
+    @{
+        Name = "Ubisoft Connect"
+        ChocoName = "ubisoft-connect"
+        Paths = @(
+            "C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe",
+            "C:\Program Files\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe"
+        )
+    },
+    @{
+        Name = "Dolphin Emulator"
+        ChocoName = "dolphin"
+        Paths = @(
+            "C:\Program Files\Dolphin\Dolphin.exe",
+            "C:\Program Files (x86)\Dolphin\Dolphin.exe"
+        )
+    }
+)
+# --- End Extras definitions ---
+
 function Is-ChocolateyInstalled {
     return (Get-Command choco.exe -ErrorAction SilentlyContinue) -ne $null
 }
@@ -404,6 +449,48 @@ if ($vpnPrompt -eq 'Y') {
     }
 }
 # --- End VPN prompt ---
+
+# --- Prompt for Extras installation ---
+Write-Host "`nWould you like to install any Extras (EA App, GOG Galaxy, Rockstar Games Launcher, Ubisoft Connect, Dolphin Emulator)?" -ForegroundColor Cyan
+do {
+    $extrasPrompt = Read-Host "Install Extras? (Y/N)"
+} while ($extrasPrompt -notmatch '^(Y|N)$')
+
+if ($extrasPrompt -eq 'Y') {
+    :extrasSelectLoop while ($true) {
+        Write-Host "`nAvailable Extras:" -ForegroundColor Cyan
+        for ($i = 0; $i -lt $extrasPrograms.Count; $i++) {
+            Write-Host "$($i+1). $($extrasPrograms[$i].Name)"
+        }
+        $extrasChoice = Read-Host "Enter the number of the Extra you want to install, or 'A' for all, or 'C' to cancel"
+        if ($extrasChoice -match '^[Cc]$') {
+            # Go back to the previous prompt
+            do {
+                $extrasPrompt = Read-Host "Install Extras? (Y/N)"
+            } while ($extrasPrompt -notmatch '^(Y|N)$')
+            if ($extrasPrompt -eq 'Y') {
+                continue extrasSelectLoop
+            } else {
+                break
+            }
+        }
+        if ($extrasChoice -match '^[Aa]$') {
+            foreach ($extra in $extrasPrograms) {
+                $programs += $extra
+            }
+            Write-Host "`nAll Extras will be included in the installation list." -ForegroundColor Green
+            break
+        }
+        $validExtras = $extrasChoice -match '^\d+$' -and [int]$extrasChoice -ge 1 -and [int]$extrasChoice -le $extrasPrograms.Count
+        if ($validExtras) {
+            $selectedExtra = $extrasPrograms[[int]$extrasChoice - 1]
+            $programs += $selectedExtra
+            Write-Host "`n$($selectedExtra.Name) will be included in the installation list." -ForegroundColor Green
+            break
+        }
+    }
+}
+# --- End Extras prompt ---
 
 # Step 2: Check for already installed programs
 Write-Host "`nChecking for installed programs..."

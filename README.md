@@ -89,6 +89,13 @@ The script currently checks for and can install the following programs:
   - ExpressVPN
   - Mullvad
 
+**Extras:**
+- EA App
+- GOG Galaxy
+- Rockstar Games Launcher
+- Ubisoft Connect
+- Dolphin Emulator
+
 ---
 
 ## 📄 License
