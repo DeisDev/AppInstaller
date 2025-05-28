@@ -71,6 +71,6 @@ The script currently checks for and can install the following programs:
 
 ## 📄 License
 
-Personal use only. No warranty provided.
+Apache 2.0 License.
 
 ---
