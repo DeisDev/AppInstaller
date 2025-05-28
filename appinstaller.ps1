@@ -122,6 +122,7 @@ $webBrowsers = @(
         Name = "Chrome"
         ChocoName = "googlechrome"
         Paths = @(
+            "C:\Users\$env:USERNAME\AppData\Local\Google\Chrome\Application\chrome.exe",
             "C:\Program Files\Google\Chrome\Application\chrome.exe",
             "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
         )
@@ -130,6 +131,7 @@ $webBrowsers = @(
         Name = "Brave"
         ChocoName = "brave"
         Paths = @(
+            "C:\Users\$env:USERNAME\AppData\Local\BraveSoftware\Brave-Browser\Application\brave.exe",
             "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe",
             "C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe"
         )
@@ -240,8 +242,14 @@ if ($mainAction -eq 'U') {
     }
     if ($installedViaChoco.Count -eq 0) {
         Write-Host "`nNo managed software found to uninstall." -ForegroundColor Yellow
-        Write-Host "`nPress Enter to exit..."
-        Read-Host | Out-Null
+        # Prompt to restart or exit if nothing to uninstall
+        do {
+            $restartChoice = Read-Host "`nType 'R' to return to the start, or press Enter to exit."
+            if ($restartChoice -match '^[Rr]$') {
+                & powershell -ExecutionPolicy Bypass -File $MyInvocation.MyCommand.Definition
+                exit $LASTEXITCODE
+            }
+        } while ($restartChoice -match '^[Rr]$' -eq $false -and $restartChoice -ne "")
         exit 0
     }
     Write-Host "`nInstalled software managed by this script:" -ForegroundColor Cyan
