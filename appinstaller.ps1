@@ -246,7 +246,6 @@ if ($browserPrompt -eq 'Y') {
         for ($i = 0; $i -lt $webBrowsers.Count; $i++) {
             Write-Host "$($i+1). $($webBrowsers[$i].Name)"
         }
-        Write-Host "C. Cancel and go back"
         $browserChoice = Read-Host "Enter the number of the browser you want to install, or 'C' to cancel"
         if ($browserChoice -match '^[Cc]$') {
             # Go back to the previous prompt
