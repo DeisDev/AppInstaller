@@ -163,9 +163,37 @@ $webBrowsers = @(
             "C:\Program Files\LibreWolf\librewolf.exe",
             "C:\Program Files (x86)\LibreWolf\librewolf.exe"
         )
+    },
+    @{
+        Name = "Chromium"
+        ChocoName = "chromium"
+        Paths = @(
+            "C:\Program Files\Chromium\Application\chrome.exe",
+            "C:\Program Files (x86)\Chromium\Application\chrome.exe"
+        )
+    },
+    @{
+        Name = "Tor Browser"
+        ChocoName = "tor-browser"
+        Paths = @(
+            "C:\Program Files\Tor Browser\Browser\firefox.exe",
+            "C:\Program Files (x86)\Tor Browser\Browser\firefox.exe",
+            "C:\Users\$env:USERNAME\Desktop\Tor Browser\Browser\firefox.exe"
+        )
     }
 )
 # --- End web browsers definitions ---
+
+# --- DDU definition ---
+$dduProgram = @{
+    Name = "Display Driver Uninstaller (DDU)"
+    ChocoName = "display-driver-uninstaller"
+    Paths = @(
+        "C:\Program Files\Display Driver Uninstaller\Display Driver Uninstaller.exe",
+        "C:\Program Files (x86)\Display Driver Uninstaller\Display Driver Uninstaller.exe"
+    )
+}
+# --- End DDU definition ---
 
 function Is-ChocolateyInstalled {
     return (Get-Command choco.exe -ErrorAction SilentlyContinue) -ne $null
@@ -226,6 +254,18 @@ if ($browserPrompt -eq 'Y') {
     Write-Host "`n$($selectedBrowser.Name) will be included in the installation list." -ForegroundColor Green
 }
 # --- End browser prompt ---
+
+# --- Prompt for DDU installation ---
+Write-Host "`nWould you like to install Display Driver Uninstaller (DDU)?" -ForegroundColor Cyan
+do {
+    $dduPrompt = Read-Host "Install DDU? (Y/N)"
+} while ($dduPrompt -notmatch '^(Y|N)$')
+
+if ($dduPrompt -eq 'Y') {
+    $programs += $dduProgram
+    Write-Host "`nDisplay Driver Uninstaller (DDU) will be included in the installation list." -ForegroundColor Green
+}
+# --- End DDU prompt ---
 
 # Step 2: Check for already installed programs
 Write-Host "`nChecking for installed programs..."
