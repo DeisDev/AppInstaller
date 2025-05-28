@@ -1,6 +1,6 @@
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
-Write-Host "v0.2.8a" -ForegroundColor DarkGray
+Write-Host "v0.2.9a" -ForegroundColor DarkGray
 Write-Host "Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0" -ForegroundColor DarkGray
 Write-Host "=============================================" -ForegroundColor DarkGray
 
@@ -224,65 +224,6 @@ function Is-ProgramInstalled {
     }
     return $false
 }
-
-# --- Install or Uninstall prompt (moved to top) ---
-do {
-    $mainAction = Read-Host "`nWould you like to (I)nstall or (U)ninstall software? (I/U)"
-} while ($mainAction -notmatch '^(I|U)$')
-
-if ($mainAction -eq 'U') {
-    # Gather all programs that are installed via Chocolatey, including browsers
-    $installedViaChoco = @()
-    $allUninstallables = $programs + $webBrowsers
-    foreach ($prog in $allUninstallables) {
-        $pkg = choco list --local-only --exact $prog.ChocoName 2>$null | Select-String "^$($prog.ChocoName) "
-        if ($pkg -ne $null) {
-            $installedViaChoco += $prog
-        }
-    }
-    if ($installedViaChoco.Count -eq 0) {
-        Write-Host "`nNo managed software found to uninstall." -ForegroundColor Yellow
-        # Prompt to restart or exit if nothing to uninstall
-        do {
-            $restartChoice = Read-Host "`nType 'R' to return to the start, or press Enter to exit."
-            if ($restartChoice -match '^[Rr]$') {
-                & powershell -ExecutionPolicy Bypass -File $MyInvocation.MyCommand.Definition
-                exit $LASTEXITCODE
-            }
-        } while ($restartChoice -match '^[Rr]$' -eq $false -and $restartChoice -ne "")
-        exit 0
-    }
-    Write-Host "`nInstalled software managed by this script:" -ForegroundColor Cyan
-    for ($i = 0; $i -lt $installedViaChoco.Count; $i++) {
-        Write-Host "$($i+1). $($installedViaChoco[$i].Name)"
-    }
-    do {
-        $uninstallChoice = Read-Host "Enter the number of the software you want to uninstall (or 'C' to cancel)"
-        if ($uninstallChoice -match '^[Cc]$') {
-            Write-Host "Uninstall cancelled."
-            Write-Host "`nPress Enter to exit..."
-            Read-Host | Out-Null
-            exit 0
-        }
-        $validUninstall = $uninstallChoice -match '^\d+$' -and [int]$uninstallChoice -ge 1 -and [int]$uninstallChoice -le $installedViaChoco.Count
-    } while (-not $validUninstall)
-    $selectedUninstall = $installedViaChoco[[int]$uninstallChoice - 1]
-    Write-Host "`nUninstalling $($selectedUninstall.Name)..."
-    choco uninstall $($selectedUninstall.ChocoName) -y
-    Write-Host "`nUninstallation complete!" -ForegroundColor Green
-
-    # Prompt to restart or exit after uninstall
-    do {
-        $restartChoice = Read-Host "`nType 'R' to return to the start, or press Enter to exit."
-        if ($restartChoice -match '^[Rr]$') {
-            & powershell -ExecutionPolicy Bypass -File $MyInvocation.MyCommand.Definition
-            exit $LASTEXITCODE
-        }
-    } while ($restartChoice -match '^[Rr]$' -eq $false -and $restartChoice -ne "")
-
-    exit 0
-}
-# --- End install/uninstall prompt (moved to top) ---
 
 # Step 1: Ensure Chocolatey is installed
 if (-not (Is-ChocolateyInstalled)) {
