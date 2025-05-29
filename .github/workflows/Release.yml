@@ -24,7 +24,7 @@ jobs:
         run: |
           {
             echo 'changelog<<EOF'
-            git log -n 10 --pretty=format:'- [`%h`](https://github.com/${{ github.repository }}/commit/%H) %s (by %an)'
+            git log -n 10 --pretty=format:'- [`%h`](https://github.com/'"$GITHUB_REPOSITORY"'/commit/%H) %s (by %an)'
             echo 'EOF'
           } >> $GITHUB_OUTPUT
 
