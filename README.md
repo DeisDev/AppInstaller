@@ -59,6 +59,7 @@ The script currently checks for and can install the following programs:
 - Notepad++
 - Sublime Text 3
 - Neovim
+- Obsidian
 
 **Web Browsers:**
 - Edge
@@ -70,6 +71,7 @@ The script currently checks for and can install the following programs:
 - LibreWolf
 - Chromium
 - Tor Browser
+- Vivaldi
 
 **Game Launchers:**
 - Steam
@@ -97,6 +99,7 @@ The script currently checks for and can install the following programs:
 - TranslucentTB
 - Display Driver Uninstaller (DDU)
 - VLC
+- WizTree
 
 **VPNs:**
 - NordVPN
@@ -112,6 +115,15 @@ The script currently checks for and can install the following programs:
 
 **Benchmarks:**
 - FurMark
+
+---
+
+## 📅 Releases
+
+- **Daily pre-releases** are published automatically with the latest changes for testing and feedback.
+- **Stable releases** are published less frequently and are recommended for most users.
+
+You can always fetch the latest version directly from GitHub using the command in the Usage section.
 
 ---
 

@@ -133,14 +133,16 @@ $browsers = @(
     @{ Name = "Opera";        ChocoName = "opera";          Paths = @("C:\Users\$env:USERNAME\AppData\Local\Programs\Opera\opera.exe") },
     @{ Name = "LibreWolf";    ChocoName = "librewolf";      Paths = @("C:\Program Files\LibreWolf\librewolf.exe", "C:\Program Files (x86)\LibreWolf\librewolf.exe") },
     @{ Name = "Chromium";     ChocoName = "chromium";       Paths = @("C:\Program Files\Chromium\Application\chrome.exe", "C:\Program Files (x86)\Chromium\Application\chrome.exe") },
-    @{ Name = "Tor Browser";  ChocoName = "tor-browser";    Paths = @("C:\Program Files\Tor Browser\Browser\firefox.exe", "C:\Program Files (x86)\Tor Browser\Browser\firefox.exe", "C:\Users\$env:USERNAME\Desktop\Tor Browser\Browser\firefox.exe") }
+    @{ Name = "Tor Browser";  ChocoName = "tor-browser";    Paths = @("C:\Program Files\Tor Browser\Browser\firefox.exe", "C:\Program Files (x86)\Tor Browser\Browser\firefox.exe", "C:\Users\$env:USERNAME\Desktop\Tor Browser\Browser\firefox.exe") },
+    @{ Name = "Vivaldi";      ChocoName = "vivaldi";         Paths = @("C:\Users\$env:USERNAME\AppData\Local\Vivaldi\Application\vivaldi.exe", "C:\Program Files\Vivaldi\Application\vivaldi.exe", "C:\Program Files (x86)\Vivaldi\Application\vivaldi.exe") }
 )
 
 # Text Editors
 $textEditors = @(
     @{ Name = "Notepad++";     ChocoName = "notepadplusplus"; Paths = @("C:\Program Files\Notepad++\notepad++.exe", "C:\Program Files (x86)\Notepad++\notepad++.exe") },
     @{ Name = "Sublime Text 3";ChocoName = "sublimetext3";    Paths = @("C:\Program Files\Sublime Text 3\sublime_text.exe", "C:\Program Files (x86)\Sublime Text 3\sublime_text.exe") },
-    @{ Name = "Neovim";        ChocoName = "neovim";           Paths = @("C:\Program Files\Neovim\bin\nvim.exe", "C:\Program Files (x86)\Neovim\bin\nvim.exe") }
+    @{ Name = "Neovim";        ChocoName = "neovim";           Paths = @("C:\Program Files\Neovim\bin\nvim.exe", "C:\Program Files (x86)\Neovim\bin\nvim.exe") },
+    @{ Name = "Obsidian";      ChocoName = "obsidian";         Paths = @("C:\Users\$env:USERNAME\AppData\Local\Obsidian\Obsidian.exe", "C:\Program Files\Obsidian\Obsidian.exe", "C:\Program Files (x86)\Obsidian\Obsidian.exe") }
 )
 
 # Game Launchers
@@ -168,7 +170,8 @@ $utilities = @(
     @{ Name = "OBS Studio";    ChocoName = "obs-studio";      Paths = @("C:\Program Files\obs-studio\bin\64bit\obs64.exe", "C:\Program Files (x86)\obs-studio\bin\32bit\obs32.exe") },
     @{ Name = "TranslucentTB"; ChocoName = "translucenttb";   Paths = @("$env:LOCALAPPDATA\Microsoft\WindowsApps\TranslucentTB.exe", "C:\Program Files\TranslucentTB\TranslucentTB.exe", "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe", "C:\Program Files\WindowsApps\28017CharlesMilette.TranslucentTB_2025.1.0.0_x64__v826wp6bftszj\TranslucentTB.exe") },
     @{ Name = "Display Driver Uninstaller (DDU)"; ChocoName = "display-driver-uninstaller"; Paths = @("C:\Program Files\Display Driver Uninstaller\Display Driver Uninstaller.exe", "C:\Program Files (x86)\Display Driver Uninstaller\Display Driver Uninstaller.exe") },
-    @{ Name = "VLC";           ChocoName = "vlc";             Paths = @("C:\Program Files\VideoLAN\VLC\vlc.exe", "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe") }
+    @{ Name = "VLC";           ChocoName = "vlc";             Paths = @("C:\Program Files\VideoLAN\VLC\vlc.exe", "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe") },
+    @{ Name = "WizTree";       ChocoName = "wiztree";          Paths = @("C:\Program Files\WizTree\WizTree64.exe", "C:\Program Files (x86)\WizTree\WizTree.exe") }
 )
 
 # Torrents
