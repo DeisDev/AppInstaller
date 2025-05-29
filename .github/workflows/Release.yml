@@ -22,9 +22,11 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          echo 'changelog<<EOF' >> $GITHUB_OUTPUT
-          git log -n 10 --pretty=format:'- [`%h`](https://github.com/${{ github.repository }}/commit/%H) %s (by %an)' >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+          {
+            echo 'changelog<<EOF'
+            git log -n 10 --pretty=format:'- [`%h`](https://github.com/${{ github.repository }}/commit/%H) %s (by %an)'
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: Create release
         uses: softprops/action-gh-release@v2
