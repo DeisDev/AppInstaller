@@ -2,11 +2,11 @@
 
 A **simple, interactive PowerShell script** for quickly setting up a new Windows PC by checking for and installing popular programs using [Chocolatey](https://chocolatey.org/).
 
-[!NOTE]
+> [!NOTE]
 > **Intended Use:**  
 > Ideal for fresh Windows installs, new PCs, or quickly restoring your preferred software stack.
 
-[!WARNING]
+> [!WARNING]
 > **Disclaimer:**  
 > This project is primarily for my personal use. It is not designed or maintained as a general-purpose solution.  
 > I do **not** accept pull requests or issues. Please feel free to fork or adapt the script for your own needs, but official support or contributions will not be provided.
@@ -38,6 +38,7 @@ A **simple, interactive PowerShell script** for quickly setting up a new Windows
 1. **Clone or download this repository.**
 2. **Open PowerShell as Administrator.**
 3. **Run the script:**
+
    ```powershell
    .\AppInstaller.ps1
    ```
@@ -128,7 +129,7 @@ Each entry defines the program name, Chocolatey package name, and common install
 
 ## 📅 Releases
 
-[!TIP]
+> [!TIP]
 > - **Daily pre-releases** are published automatically with the latest changes for testing and feedback.
 > - **Stable releases** are published less frequently and are recommended for most users.
 >
