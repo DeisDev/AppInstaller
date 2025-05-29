@@ -17,10 +17,8 @@ A **simple, interactive PowerShell script** for quickly setting up a new Windows
 
 - **Interactive selection:** Choose which categories and programs to install (browsers, editors, utilities, VPNs, etc.)
 - **Checks for existing installs:** Skips programs already present on your system
-- **Automatic installation:** Installs missing programs via Chocolatey
 - **Self-updating:** Always fetches and runs the latest version of the script from GitHub if run locally
 - **Chocolatey bootstrap:** Installs Chocolatey automatically if not already installed
-- **System info display:** Shows Windows version, architecture, and network status at startup
 - **Easy customization:** Add or remove programs by editing the script
 
 ---
@@ -34,6 +32,9 @@ A **simple, interactive PowerShell script** for quickly setting up a new Windows
 ---
 
 ## 📝 Usage
+
+> [!IMPORTANT]
+> Make sure you execute the script as Administrator or else programs may fail to install. 
 
 1. **Clone or download this repository.**
 2. **Open PowerShell as Administrator.**
@@ -51,6 +52,10 @@ A **simple, interactive PowerShell script** for quickly setting up a new Windows
 ---
 
 ## 🛠️ Customization
+
+> [!TIP]
+> Adding a package to the list is very straightforward. If you do not see a package you are looking for, you can add it to the script in minutes. 
+
 
 To add or remove programs, simply edit the `$browsers`, `$textEditors`, `$utilities`, etc. arrays in the script.  
 Each entry defines the program name, Chocolatey package name, and common install paths for detection.
@@ -126,8 +131,6 @@ Each entry defines the program name, Chocolatey package name, and common install
 </details>
 
 ---
-
-## 📅 Releases
 
 > [!TIP]
 > - **Daily pre-releases** are published automatically with the latest changes for testing and feedback.
