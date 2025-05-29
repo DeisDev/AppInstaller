@@ -2,9 +2,14 @@
 
 A **simple, interactive PowerShell script** for quickly setting up a new Windows PC by checking for and installing popular programs using [Chocolatey](https://chocolatey.org/).
 
-> ⚠️ _**Disclaimer:** This project is primarily for my personal use. It is not designed or maintained as a general-purpose solution. I do **not** accept pull requests or issues. Please feel free to fork or adapt the script for your own needs, but official support or contributions will not be provided._
+[!NOTE]
+> **Intended Use:**  
+> Ideal for fresh Windows installs, new PCs, or quickly restoring your preferred software stack.
 
-> 💡 _**Intended Use:** Ideal for fresh Windows installs, new PCs, or quickly restoring your preferred software stack._
+[!WARNING]
+> **Disclaimer:**  
+> This project is primarily for my personal use. It is not designed or maintained as a general-purpose solution.  
+> I do **not** accept pull requests or issues. Please feel free to fork or adapt the script for your own needs, but official support or contributions will not be provided.
 
 ---
 
@@ -33,30 +38,28 @@ A **simple, interactive PowerShell script** for quickly setting up a new Windows
 1. **Clone or download this repository.**
 2. **Open PowerShell as Administrator.**
 3. **Run the script:**
-
    ```powershell
    .\AppInstaller.ps1
    ```
-
    **Or run directly from GitHub (no download needed):**
-
    ```powershell
    irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
    ```
-
 4. **Follow the prompts** to select and install your desired programs.
 
 ---
 
 ## 🛠️ Customization
 
-To add or remove programs, simply edit the `$browsers`, `$textEditors`, `$utilities`, etc. arrays in the script. Each entry defines the program name, Chocolatey package name, and common install paths for detection.
+To add or remove programs, simply edit the `$browsers`, `$textEditors`, `$utilities`, etc. arrays in the script.  
+Each entry defines the program name, Chocolatey package name, and common install paths for detection.
 
 ---
 
 ## 📋 Supported Programs
 
-The script currently checks for and can install the following programs:
+<details>
+<summary><strong>Click to expand full list</strong></summary>
 
 **Text Editors:**
 - Notepad++
@@ -119,14 +122,17 @@ The script currently checks for and can install the following programs:
 **Benchmarks:**
 - FurMark
 
+</details>
+
 ---
 
 ## 📅 Releases
 
-- **Daily pre-releases** are published automatically with the latest changes for testing and feedback.
-- **Stable releases** are published less frequently and are recommended for most users.
-
-You can always fetch the latest version directly from GitHub using the command in the Usage section.
+[!TIP]
+> - **Daily pre-releases** are published automatically with the latest changes for testing and feedback.
+> - **Stable releases** are published less frequently and are recommended for most users.
+>
+> You can always fetch the latest version directly from GitHub using the command in the Usage section.
 
 ---
 
