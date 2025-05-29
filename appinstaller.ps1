@@ -150,6 +150,8 @@ $gameLaunchers = @(
 # Utilities
 $utilities = @(
     @{ Name = "Notepad++";     ChocoName = "notepadplusplus"; Paths = @("C:\Program Files\Notepad++\notepad++.exe", "C:\Program Files (x86)\Notepad++\notepad++.exe") },
+    @{ Name = "Sublime Text 3";ChocoName = "sublimetext3";    Paths = @("C:\Program Files\Sublime Text 3\sublime_text.exe", "C:\Program Files (x86)\Sublime Text 3\sublime_text.exe") },
+    @{ Name = "Neovim";        ChocoName = "neovim";           Paths = @("C:\Program Files\Neovim\bin\nvim.exe", "C:\Program Files (x86)\Neovim\bin\nvim.exe") },
     @{ Name = "7zip";          ChocoName = "7zip";            Paths = @("C:\Program Files\7-Zip\7zFM.exe", "C:\Program Files (x86)\7-Zip\7zFM.exe") },
     @{ Name = "WinRAR";        ChocoName = "winrar";          Paths = @("C:\Program Files\WinRAR\WinRAR.exe", "C:\Program Files (x86)\WinRAR\WinRAR.exe") },
     @{ Name = "Bulk Crap Uninstaller"; ChocoName = "bulk-crap-uninstaller"; Paths = @("C:\Program Files\Bulk Crap Uninstaller\BCUninstaller.exe", "C:\Program Files (x86)\Bulk Crap Uninstaller\BCUninstaller.exe") },

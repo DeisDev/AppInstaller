@@ -57,6 +57,8 @@ The script currently checks for and can install the following programs:
 
 **Text Editors:**
 - Notepad++
+- Sublime Text 3
+- Neovim
 
 **Web Browsers:**
 - Edge
