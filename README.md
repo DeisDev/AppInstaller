@@ -1,27 +1,30 @@
 # 🛠️ AppInstaller
 
-A **very simple PowerShell script** that checks for and installs programs using [Chocolatey](https://chocolatey.org/).
+A **simple, interactive PowerShell script** for quickly setting up a new Windows PC by checking for and installing popular programs using [Chocolatey](https://chocolatey.org/).
 
-> ⚠️ _**Disclaimer:** This project is mainly intended for my private use. It is not designed or maintained as a general-purpose solution. I will **not** be accepting pull requests or issues. Please feel free to fork or adapt the script for your own needs, but official support or contributions will not be provided._
+> ⚠️ _**Disclaimer:** This project is primarily for my personal use. It is not designed or maintained as a general-purpose solution. I do **not** accept pull requests or issues. Please feel free to fork or adapt the script for your own needs, but official support or contributions will not be provided._
 
-> 💡 _**Intended Use:** This script is primarily designed for quickly setting up fresh installs of Windows or new PCs._
+> 💡 _**Intended Use:** Ideal for fresh Windows installs, new PCs, or quickly restoring your preferred software stack._
 
 ---
 
 ## 🚀 Features
 
-- Checks if specified programs are installed
-- Installs missing programs automatically via Chocolatey
-- **Auto-update:** Always fetches and runs the latest version of the script from GitHub if run locally
-- Interactive selection for browsers, VPNs, and optional tools (by category)
-- Easy to customize for your own needs
+- **Interactive selection:** Choose which categories and programs to install (browsers, editors, utilities, VPNs, etc.)
+- **Checks for existing installs:** Skips programs already present on your system
+- **Automatic installation:** Installs missing programs via Chocolatey
+- **Self-updating:** Always fetches and runs the latest version of the script from GitHub if run locally
+- **Chocolatey bootstrap:** Installs Chocolatey automatically if not already installed
+- **System info display:** Shows Windows version, architecture, and network status at startup
+- **Easy customization:** Add or remove programs by editing the script
 
 ---
 
 ## 📦 Requirements
 
-- [PowerShell](https://docs.microsoft.com/en-us/powershell/)
-- [Chocolatey](https://chocolatey.org/install) (will be installed if not present)
+- [PowerShell](https://docs.microsoft.com/en-us/powershell/) (Windows 10/11 recommended)
+- [Chocolatey](https://chocolatey.org/install) (will be installed automatically if not present)
+- **Administrator privileges** (required for installing software)
 
 ---
 
@@ -41,13 +44,13 @@ A **very simple PowerShell script** that checks for and installs programs using 
    irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
    ```
 
-4. **Follow the prompts.**
+4. **Follow the prompts** to select and install your desired programs.
 
 ---
 
 ## 🛠️ Customization
 
-Edit the script to add or remove programs as needed.
+To add or remove programs, simply edit the `$browsers`, `$textEditors`, `$utilities`, etc. arrays in the script. Each entry defines the program name, Chocolatey package name, and common install paths for detection.
 
 ---
 
