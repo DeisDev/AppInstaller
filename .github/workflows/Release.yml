@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Get version from script
+        id: get_version
+        run: |
+          version=$(grep -Po '\$scriptVersion\s*=\s*"\K[^"]+' appinstaller.ps1)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo 'changelog<<EOF' >> $GITHUB_OUTPUT
+          git log -n 10 --pretty=format:'- [`%h`](https://github.com/${{ github.repository }}/commit/%H) %s (by %an)' >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          body: |
+            Latest release of the appinstaller.ps1 script.
+
+            ## Changelog (last 10 commits)
+            ${{ steps.changelog.outputs.changelog }}
+
+            _Note: Only the 10 most recent commits are shown. [See more commits here.](https://github.com/DeisDev/AppInstaller/commits/main)_
+
+            ## Run without downloading
+
+            To run directly from GitHub in an elevated PowerShell prompt:
+
+            ```powershell
+            irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
+            ```
+
+            Or, using `Invoke-WebRequest`:
+
+            ```powershell
+            iwr https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 -UseBasicParsing | iex
+            ```
+          files: appinstaller.ps1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
