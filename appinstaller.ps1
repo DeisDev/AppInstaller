@@ -136,6 +136,13 @@ $browsers = @(
     @{ Name = "Tor Browser";  ChocoName = "tor-browser";    Paths = @("C:\Program Files\Tor Browser\Browser\firefox.exe", "C:\Program Files (x86)\Tor Browser\Browser\firefox.exe", "C:\Users\$env:USERNAME\Desktop\Tor Browser\Browser\firefox.exe") }
 )
 
+# Text Editors
+$textEditors = @(
+    @{ Name = "Notepad++";     ChocoName = "notepadplusplus"; Paths = @("C:\Program Files\Notepad++\notepad++.exe", "C:\Program Files (x86)\Notepad++\notepad++.exe") },
+    @{ Name = "Sublime Text 3";ChocoName = "sublimetext3";    Paths = @("C:\Program Files\Sublime Text 3\sublime_text.exe", "C:\Program Files (x86)\Sublime Text 3\sublime_text.exe") },
+    @{ Name = "Neovim";        ChocoName = "neovim";           Paths = @("C:\Program Files\Neovim\bin\nvim.exe", "C:\Program Files (x86)\Neovim\bin\nvim.exe") }
+)
+
 # Game Launchers
 $gameLaunchers = @(
     @{ Name = "Steam";             ChocoName = "steam";              Paths = @("C:\Program Files (x86)\Steam\steam.exe") },
@@ -149,9 +156,6 @@ $gameLaunchers = @(
 
 # Utilities
 $utilities = @(
-    @{ Name = "Notepad++";     ChocoName = "notepadplusplus"; Paths = @("C:\Program Files\Notepad++\notepad++.exe", "C:\Program Files (x86)\Notepad++\notepad++.exe") },
-    @{ Name = "Sublime Text 3";ChocoName = "sublimetext3";    Paths = @("C:\Program Files\Sublime Text 3\sublime_text.exe", "C:\Program Files (x86)\Sublime Text 3\sublime_text.exe") },
-    @{ Name = "Neovim";        ChocoName = "neovim";           Paths = @("C:\Program Files\Neovim\bin\nvim.exe", "C:\Program Files (x86)\Neovim\bin\nvim.exe") },
     @{ Name = "7zip";          ChocoName = "7zip";            Paths = @("C:\Program Files\7-Zip\7zFM.exe", "C:\Program Files (x86)\7-Zip\7zFM.exe") },
     @{ Name = "WinRAR";        ChocoName = "winrar";          Paths = @("C:\Program Files\WinRAR\WinRAR.exe", "C:\Program Files (x86)\WinRAR\WinRAR.exe") },
     @{ Name = "Bulk Crap Uninstaller"; ChocoName = "bulk-crap-uninstaller"; Paths = @("C:\Program Files\Bulk Crap Uninstaller\BCUninstaller.exe", "C:\Program Files (x86)\Bulk Crap Uninstaller\BCUninstaller.exe") },
@@ -163,7 +167,8 @@ $utilities = @(
     @{ Name = "GPU-Z";         ChocoName = "gpu-z";           Paths = @("C:\Program Files\GPU-Z\GPU-Z.exe", "C:\Program Files (x86)\GPU-Z\GPU-Z.exe") },
     @{ Name = "OBS Studio";    ChocoName = "obs-studio";      Paths = @("C:\Program Files\obs-studio\bin\64bit\obs64.exe", "C:\Program Files (x86)\obs-studio\bin\32bit\obs32.exe") },
     @{ Name = "TranslucentTB"; ChocoName = "translucenttb";   Paths = @("$env:LOCALAPPDATA\Microsoft\WindowsApps\TranslucentTB.exe", "C:\Program Files\TranslucentTB\TranslucentTB.exe", "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe", "C:\Program Files\WindowsApps\28017CharlesMilette.TranslucentTB_2025.1.0.0_x64__v826wp6bftszj\TranslucentTB.exe") },
-    @{ Name = "Display Driver Uninstaller (DDU)"; ChocoName = "display-driver-uninstaller"; Paths = @("C:\Program Files\Display Driver Uninstaller\Display Driver Uninstaller.exe", "C:\Program Files (x86)\Display Driver Uninstaller\Display Driver Uninstaller.exe") }
+    @{ Name = "Display Driver Uninstaller (DDU)"; ChocoName = "display-driver-uninstaller"; Paths = @("C:\Program Files\Display Driver Uninstaller\Display Driver Uninstaller.exe", "C:\Program Files (x86)\Display Driver Uninstaller\Display Driver Uninstaller.exe") },
+    @{ Name = "VLC";           ChocoName = "vlc";             Paths = @("C:\Program Files\VideoLAN\VLC\vlc.exe", "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe") }
 )
 
 # Torrents
@@ -224,6 +229,7 @@ function Select-ProgramsFromCategory($categoryName, $programList) {
 }
 
 $programs = @()
+$programs += Select-ProgramsFromCategory "Text Editors" $textEditors
 $programs += Select-ProgramsFromCategory "Web Browsers" $browsers
 $programs += Select-ProgramsFromCategory "Game Launchers" $gameLaunchers
 $programs += Select-ProgramsFromCategory "Utilities" $utilities
