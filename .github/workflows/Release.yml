@@ -21,12 +21,13 @@ jobs:
 
       - name: Generate changelog
         id: changelog
+        shell: bash
         run: |
           {
-            echo 'changelog<<EOF'
+            echo "changelog<<EOF"
             git log -n 10 --pretty=format:'- [`%h`](https://github.com/'"$GITHUB_REPOSITORY"'/commit/%H) %s (by %an)'
-            echo 'EOF'
-          } >> $GITHUB_OUTPUT
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create release
         uses: softprops/action-gh-release@v2
