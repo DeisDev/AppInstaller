@@ -26,7 +26,30 @@ Write-Host "=============================================" -ForegroundColor Dark
 # PowerShell script to install selected applications, pulling latest script from GitHub on each run.
 
 # --- Admin check section ---
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+$devEnv = $false
+# Check for VSCode environment variable
+if ($env:TERM_PROGRAM -eq "vscode") {
+    $devEnv = $true
+    Write-Host "[DEV MODE] Detected VSCode environment (`$env:TERM_PROGRAM = vscode`)" -ForegroundColor Yellow
+} else {
+    # Check if parent process is Code.exe (VSCode)
+    try {
+        $parent = Get-CimInstance Win32_Process -Filter "ProcessId=$((Get-CimInstance Win32_Process -Filter "ProcessId=$PID").ParentProcessId)"
+        if ($parent.Name -like "Code.exe") {
+            $devEnv = $true
+            Write-Host "[DEV MODE] Detected VSCode parent process: $($parent.Name) (PID: $($parent.ProcessId))" -ForegroundColor Yellow
+        }
+    } catch {
+        Write-Host "[DEV MODE] Could not determine parent process for development environment detection." -ForegroundColor DarkGray
+    }
+}
+
+if ($devEnv) {
+    Write-Host "[DEV MODE] Running in development environment. Bypassing administrator check." -ForegroundColor Yellow
+    Write-Host "[DEV MODE] Current PID: $PID" -ForegroundColor DarkGray
+}
+
+if (-not $devEnv -and -not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host "`nThis script must be run as Administrator. Please right-click PowerShell and select 'Run as administrator'." -ForegroundColor Red
     exit 1
 }
@@ -120,17 +143,35 @@ $gameLaunchers = @(
     @{ Name = "EA App";            ChocoName = "ea-app";             Paths = @("C:\Program Files\Electronic Arts\EA Desktop\EA Desktop.exe", "C:\Program Files\EA Games\EA Desktop\EA Desktop.exe", "C:\Users\$env:USERNAME\AppData\Local\EADesktop\EA Desktop.exe", "C:\Users\$env:USERNAME\AppData\Roaming\EADesktop\EA Desktop.exe", "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop\EADesktop.exe") },
     @{ Name = "GOG Galaxy";        ChocoName = "gog-galaxy";         Paths = @("C:\Program Files (x86)\GOG Galaxy\GalaxyClient.exe", "C:\Program Files\GOG Galaxy\GalaxyClient.exe") },
     @{ Name = "Rockstar Launcher"; ChocoName = "rockstar-launcher";  Paths = @("C:\Program Files\Rockstar Games\Launcher\Launcher.exe", "C:\Program Files (x86)\Rockstar Games\Launcher\Launcher.exe") },
-    @{ Name = "Ubisoft Connect";   ChocoName = "ubisoft-connect";    Paths = @("C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe", "C:\Program Files\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe") }
+    @{ Name = "Ubisoft Connect";   ChocoName = "ubisoft-connect";    Paths = @("C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe", "C:\Program Files\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe") },
+    @{ Name = "Prism Launcher";    ChocoName = "prismlauncher";      Paths = @("C:\Program Files\Prism Launcher\prismlauncher.exe", "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe", "C:\Users\$env:USERNAME\AppData\Local\Programs\PrismLauncher\prismlauncher.exe") }
 )
 
 # Utilities
 $utilities = @(
     @{ Name = "Notepad++";     ChocoName = "notepadplusplus"; Paths = @("C:\Program Files\Notepad++\notepad++.exe", "C:\Program Files (x86)\Notepad++\notepad++.exe") },
     @{ Name = "7zip";          ChocoName = "7zip";            Paths = @("C:\Program Files\7-Zip\7zFM.exe", "C:\Program Files (x86)\7-Zip\7zFM.exe") },
-    @{ Name = "VLC";           ChocoName = "vlc";             Paths = @("C:\Program Files\VideoLAN\VLC\vlc.exe", "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe") },
+    @{ Name = "WinRAR";        ChocoName = "winrar";          Paths = @("C:\Program Files\WinRAR\WinRAR.exe", "C:\Program Files (x86)\WinRAR\WinRAR.exe") },
+    @{ Name = "Bulk Crap Uninstaller"; ChocoName = "bulk-crap-uninstaller"; Paths = @("C:\Program Files\Bulk Crap Uninstaller\BCUninstaller.exe", "C:\Program Files (x86)\Bulk Crap Uninstaller\BCUninstaller.exe") },
+    @{ Name = "GIMP";          ChocoName = "gimp";            Paths = @("C:\Program Files\GIMP 2\bin\gimp-2.10.exe", "C:\Program Files\GIMP 2\bin\gimp-2.8.exe", "C:\Program Files (x86)\GIMP 2\bin\gimp-2.10.exe") },
+    @{ Name = "JDownloader2";  ChocoName = "jdownloader";     Paths = @("C:\Program Files\JDownloader\JDownloader2.exe", "C:\Program Files (x86)\JDownloader\JDownloader2.exe") },
+    @{ Name = "HWInfo";        ChocoName = "hwinfo";          Paths = @("C:\Program Files\HWiNFO64\HWiNFO64.exe", "C:\Program Files (x86)\HWiNFO32\HWiNFO32.exe") },
+    @{ Name = "Process Hacker";ChocoName = "processhacker";   Paths = @("C:\Program Files\Process Hacker 2\ProcessHacker.exe", "C:\Program Files (x86)\Process Hacker 2\ProcessHacker.exe") },
+    @{ Name = "CrystalDiskInfo";ChocoName = "crystaldiskinfo";Paths = @("C:\Program Files\CrystalDiskInfo\DiskInfo64.exe", "C:\Program Files (x86)\CrystalDiskInfo\DiskInfo32.exe") },
+    @{ Name = "GPU-Z";         ChocoName = "gpu-z";           Paths = @("C:\Program Files\GPU-Z\GPU-Z.exe", "C:\Program Files (x86)\GPU-Z\GPU-Z.exe") },
+    @{ Name = "OBS Studio";    ChocoName = "obs-studio";      Paths = @("C:\Program Files\obs-studio\bin\64bit\obs64.exe", "C:\Program Files (x86)\obs-studio\bin\32bit\obs32.exe") },
     @{ Name = "TranslucentTB"; ChocoName = "translucenttb";   Paths = @("$env:LOCALAPPDATA\Microsoft\WindowsApps\TranslucentTB.exe", "C:\Program Files\TranslucentTB\TranslucentTB.exe", "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe", "C:\Program Files\WindowsApps\28017CharlesMilette.TranslucentTB_2025.1.0.0_x64__v826wp6bftszj\TranslucentTB.exe") },
-    @{ Name = "Prism Launcher";ChocoName = "prismlauncher";   Paths = @("C:\Program Files\Prism Launcher\prismlauncher.exe", "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe", "C:\Users\$env:USERNAME\AppData\Local\Programs\PrismLauncher\prismlauncher.exe") },
     @{ Name = "Display Driver Uninstaller (DDU)"; ChocoName = "display-driver-uninstaller"; Paths = @("C:\Program Files\Display Driver Uninstaller\Display Driver Uninstaller.exe", "C:\Program Files (x86)\Display Driver Uninstaller\Display Driver Uninstaller.exe") }
+)
+
+# Torrents
+$torrents = @(
+    @{ Name = "qBittorrent"; ChocoName = "qbittorrent"; Paths = @("C:\Program Files\qBittorrent\qbittorrent.exe", "C:\Program Files (x86)\qBittorrent\qbittorrent.exe") }
+)
+
+# Benchmarks
+$benchmarks = @(
+    @{ Name = "FurMark"; ChocoName = "furmark"; Paths = @("C:\Program Files\Geeks3D\FurMark\FurMark.exe", "C:\Program Files (x86)\Geeks3D\FurMark\FurMark.exe") }
 )
 
 # VPNs
@@ -153,18 +194,18 @@ $emulators = @(
 
 # --- Selection Logic ---
 function Select-ProgramsFromCategory($categoryName, $programList) {
-    Write-Host "`nWould you like to install any $categoryName?" -ForegroundColor Cyan
+    Write-Host "`nWould you like to install any ${categoryName}?" -ForegroundColor Cyan
     do {
-        $catPrompt = Read-Host "Install from $categoryName? (Y/N)"
+        $catPrompt = Read-Host "Install from ${categoryName}? (Y/N)"
     } while ($catPrompt -notmatch '^(Y|N)$')
     $selected = @()
     if ($catPrompt -eq 'Y') {
-        Write-Host "`nAvailable $categoryName:" -ForegroundColor Cyan
+        Write-Host "`nAvailable ${categoryName}:" -ForegroundColor Cyan
         for ($i = 0; $i -lt $programList.Count; $i++) {
             Write-Host "$($i+1). $($programList[$i].Name)"
         }
         do {
-            $choice = Read-Host "Enter the number(s) of the $categoryName you want to install (comma separated, e.g. 1,3,5), or 'C' to cancel"
+            $choice = Read-Host "Enter the number(s) of the ${categoryName} you want to install (comma separated, e.g. 1,3,5), or 'C' to cancel"
             if ($choice -match '^[Cc]$') { break }
             $indices = $choice -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -match '^\d+$' }
             $valid = $indices.Count -gt 0 -and ($indices | Where-Object { ($_ -as [int]) -ge 1 -and ($_ -as [int]) -le $programList.Count }).Count -eq $indices.Count
@@ -173,7 +214,7 @@ function Select-ProgramsFromCategory($categoryName, $programList) {
             foreach ($idx in $indices) {
                 $selected += $programList[[int]$idx - 1]
             }
-            Write-Host "`nSelected $categoryName:" -ForegroundColor Green
+            Write-Host "`nSelected ${categoryName}:" -ForegroundColor Green
             foreach ($prog in $selected) { Write-Host "- $($prog.Name)" }
         }
     }
@@ -186,6 +227,8 @@ $programs += Select-ProgramsFromCategory "Game Launchers" $gameLaunchers
 $programs += Select-ProgramsFromCategory "Utilities" $utilities
 $programs += Select-ProgramsFromCategory "VPNs" $vpns
 $programs += Select-ProgramsFromCategory "Emulators" $emulators
+$programs += Select-ProgramsFromCategory "Torrents" $torrents
+$programs += Select-ProgramsFromCategory "Benchmarks" $benchmarks
 
 if ($programs.Count -eq 0) {
     Write-Host "`nNo programs selected for installation. Exiting." -ForegroundColor Cyan
@@ -239,130 +282,6 @@ if (-not (Is-ChocolateyInstalled)) {
     Write-Host "Chocolatey is already installed."
 }
 
-# --- Prompt for web browser installation ---
-Write-Host "`nWould you like to install a web browser?" -ForegroundColor Cyan
-do {
-    $browserPrompt = Read-Host "Install a web browser? (Y/N)"
-} while ($browserPrompt -notmatch '^(Y|N)$')
-
-if ($browserPrompt -eq 'Y') {
-    :browserSelectLoop while ($true) {
-        Write-Host "`nAvailable browsers:" -ForegroundColor Cyan
-        for ($i = 0; $i -lt $webBrowsers.Count; $i++) {
-            Write-Host "$($i+1). $($webBrowsers[$i].Name)"
-        }
-        $browserChoice = Read-Host "Enter the number of the browser you want to install, or 'C' to cancel"
-        if ($browserChoice -match '^[Cc]$') {
-            # Go back to the previous prompt
-            do {
-                $browserPrompt = Read-Host "Install a web browser? (Y/N)"
-            } while ($browserPrompt -notmatch '^(Y|N)$')
-            if ($browserPrompt -eq 'Y') {
-                continue browserSelectLoop
-            } else {
-                break
-            }
-        }
-        $valid = $browserChoice -match '^\d+$' -and [int]$browserChoice -ge 1 -and [int]$browserChoice -le $webBrowsers.Count
-        if ($valid) {
-            $selectedBrowser = $webBrowsers[[int]$browserChoice - 1]
-            $programs += $selectedBrowser
-            Write-Host "`n$($selectedBrowser.Name) will be included in the installation list." -ForegroundColor Green
-            break
-        }
-    }
-}
-# --- End browser prompt ---
-
-# --- Prompt for DDU installation ---
-Write-Host "`nWould you like to install Display Driver Uninstaller (DDU)?" -ForegroundColor Cyan
-do {
-    $dduPrompt = Read-Host "Install DDU? (Y/N)"
-} while ($dduPrompt -notmatch '^(Y|N)$')
-
-if ($dduPrompt -eq 'Y') {
-    $programs += $dduProgram
-    Write-Host "`nDisplay Driver Uninstaller (DDU) will be included in the installation list." -ForegroundColor Green
-}
-# --- End DDU prompt ---
-
-# --- Prompt for VPN installation ---
-Write-Host "`nWould you like to install a VPN?" -ForegroundColor Cyan
-do {
-    $vpnPrompt = Read-Host "Install a VPN? (Y/N)"
-} while ($vpnPrompt -notmatch '^(Y|N)$')
-
-if ($vpnPrompt -eq 'Y') {
-    :vpnSelectLoop while ($true) {
-        Write-Host "`nAvailable VPNs:" -ForegroundColor Cyan
-        for ($i = 0; $i -lt $vpnPrograms.Count; $i++) {
-            Write-Host "$($i+1). $($vpnPrograms[$i].Name)"
-        }
-        $vpnChoice = Read-Host "Enter the number of the VPN you want to install, or 'C' to cancel"
-        if ($vpnChoice -match '^[Cc]$') {
-            # Go back to the previous prompt
-            do {
-                $vpnPrompt = Read-Host "Install a VPN? (Y/N)"
-            } while ($vpnPrompt -notmatch '^(Y|N)$')
-            if ($vpnPrompt -eq 'Y') {
-                continue vpnSelectLoop
-            } else {
-                break
-            }
-        }
-        $validVpn = $vpnChoice -match '^\d+$' -and [int]$vpnChoice -ge 1 -and [int]$vpnChoice -le $vpnPrograms.Count
-        if ($validVpn) {
-            $selectedVpn = $vpnPrograms[[int]$vpnChoice - 1]
-            $programs += $selectedVpn
-            Write-Host "`n$($selectedVpn.Name) will be included in the installation list." -ForegroundColor Green
-            break
-        }
-    }
-}
-# --- End VPN prompt ---
-
-# --- Prompt for Extras installation ---
-Write-Host "`nWould you like to install any Extras (EA App, GOG Galaxy, Rockstar Games Launcher, Ubisoft Connect, Dolphin Emulator)?" -ForegroundColor Cyan
-do {
-    $extrasPrompt = Read-Host "Install Extras? (Y/N)"
-} while ($extrasPrompt -notmatch '^(Y|N)$')
-
-if ($extrasPrompt -eq 'Y') {
-    :extrasSelectLoop while ($true) {
-        Write-Host "`nAvailable Extras:" -ForegroundColor Cyan
-        for ($i = 0; $i -lt $extrasPrograms.Count; $i++) {
-            Write-Host "$($i+1). $($extrasPrograms[$i].Name)"
-        }
-        $extrasChoice = Read-Host "Enter the number of the Extra you want to install, or 'A' for all, or 'C' to cancel"
-        if ($extrasChoice -match '^[Cc]$') {
-            # Go back to the previous prompt
-            do {
-                $extrasPrompt = Read-Host "Install Extras? (Y/N)"
-            } while ($extrasPrompt -notmatch '^(Y|N)$')
-            if ($extrasPrompt -eq 'Y') {
-                continue extrasSelectLoop
-            } else {
-                break
-            }
-        }
-        if ($extrasChoice -match '^[Aa]$') {
-            foreach ($extra in $extrasPrograms) {
-                $programs += $extra
-            }
-            Write-Host "`nAll Extras will be included in the installation list." -ForegroundColor Green
-            break
-        }
-        $validExtras = $extrasChoice -match '^\d+$' -and [int]$extrasChoice -ge 1 -and [int]$extrasChoice -le $extrasPrograms.Count
-        if ($validExtras) {
-            $selectedExtra = $extrasPrograms[[int]$extrasChoice - 1]
-            $programs += $selectedExtra
-            Write-Host "`n$($selectedExtra.Name) will be included in the installation list." -ForegroundColor Green
-            break
-        }
-    }
-}
-# --- End Extras prompt ---
-
 # Step 2: Check for already installed programs
 Write-Host "`nChecking for installed programs..."
 $toInstall = @()
@@ -393,8 +312,13 @@ do {
 
 if ($response -eq 'N') {
     Write-Host "Installation aborted by user." -ForegroundColor Red
-    Write-Host "`nPress Enter to exit..."
-    Read-Host | Out-Null
+    do {
+        $restartChoice = Read-Host "`nType 'R' to return to the start, or press Enter to exit."
+        if ($restartChoice -match '^[Rr]$') {
+            & powershell -ExecutionPolicy Bypass -File $MyInvocation.MyCommand.Definition
+            exit $LASTEXITCODE
+        }
+    } while ($restartChoice -match '^[Rr]$' -eq $false -and $restartChoice -ne "")
     exit 0
 }
 
