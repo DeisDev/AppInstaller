@@ -1,4 +1,4 @@
-$scriptVersion = "v0.3.5a"
+$scriptVersion = "v0.3.6a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
@@ -98,272 +98,107 @@ function Update-SelfIfNeeded {
 Update-SelfIfNeeded
 # --- End self-updating section ---
 
-$programs = @(
-    @{
-        Name = "Notepad++"
-        ChocoName = "notepadplusplus"
-        Paths = @(
-            "C:\Program Files\Notepad++\notepad++.exe",
-            "C:\Program Files (x86)\Notepad++\notepad++.exe"
-        )
-    },
-    @{
-        Name = "Steam"
-        ChocoName = "steam"
-        Paths = @(
-            "C:\Program Files (x86)\Steam\steam.exe"
-        )
-    },
-    @{
-        Name = "Discord"
-        ChocoName = "discord"
-        Paths = @(
-            "$env:LOCALAPPDATA\Discord\Update.exe",
-            "C:\Program Files\Discord\Update.exe"
-        )
-    },
-    @{
-        Name = "Prism Launcher"
-        ChocoName = "prismlauncher"
-        Paths = @(
-            "C:\Program Files\Prism Launcher\prismlauncher.exe",
-            "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe",
-            "C:\Users\$env:USERNAME\AppData\Local\Programs\PrismLauncher\prismlauncher.exe"
-        )
-    },
-    @{
-        Name = "VLC"
-        ChocoName = "vlc"
-        Paths = @(
-            "C:\Program Files\VideoLAN\VLC\vlc.exe",
-            "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe"
-        )
-    },
-    @{
-        Name = "Epic Games Launcher"
-        ChocoName = "epicgameslauncher"
-        Paths = @(
-            "C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win32\EpicGamesLauncher.exe",
-            "C:\Program Files\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe"
-        )
-    },
-    @{
-        Name = "TranslucentTB"
-        ChocoName = "translucenttb"
-        Paths = @(
-            "$env:LOCALAPPDATA\Microsoft\WindowsApps\TranslucentTB.exe",
-            "C:\Program Files\TranslucentTB\TranslucentTB.exe",
-            "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe",
-            "C:\Program Files\WindowsApps\28017CharlesMilette.TranslucentTB_2025.1.0.0_x64__v826wp6bftszj\TranslucentTB.exe"
-        )
-    },
-    @{
-        Name = "7zip"
-        ChocoName = "7zip"
-        Paths = @(
-            "C:\Program Files\7-Zip\7zFM.exe",
-            "C:\Program Files (x86)\7-Zip\7zFM.exe"
-        )
-    }
+# --- Software Definitions ---
+
+# Browsers
+$browsers = @(
+    @{ Name = "Edge";         ChocoName = "microsoft-edge"; Paths = @("C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe", "C:\Program Files\Microsoft\Edge\Application\msedge.exe") },
+    @{ Name = "Chrome";       ChocoName = "googlechrome";   Paths = @("C:\Users\$env:USERNAME\AppData\Local\Google\Chrome\Application\chrome.exe", "C:\Program Files\Google\Chrome\Application\chrome.exe", "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe") },
+    @{ Name = "Brave";        ChocoName = "brave";          Paths = @("C:\Users\$env:USERNAME\AppData\Local\BraveSoftware\Brave-Browser\Application\brave.exe", "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe", "C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe") },
+    @{ Name = "Firefox";      ChocoName = "firefox";        Paths = @("C:\Program Files\Mozilla Firefox\firefox.exe", "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") },
+    @{ Name = "Opera GX";     ChocoName = "opera-gx";       Paths = @("C:\Users\$env:USERNAME\AppData\Local\Programs\Opera GX\opera.exe") },
+    @{ Name = "Opera";        ChocoName = "opera";          Paths = @("C:\Users\$env:USERNAME\AppData\Local\Programs\Opera\opera.exe") },
+    @{ Name = "LibreWolf";    ChocoName = "librewolf";      Paths = @("C:\Program Files\LibreWolf\librewolf.exe", "C:\Program Files (x86)\LibreWolf\librewolf.exe") },
+    @{ Name = "Chromium";     ChocoName = "chromium";       Paths = @("C:\Program Files\Chromium\Application\chrome.exe", "C:\Program Files (x86)\Chromium\Application\chrome.exe") },
+    @{ Name = "Tor Browser";  ChocoName = "tor-browser";    Paths = @("C:\Program Files\Tor Browser\Browser\firefox.exe", "C:\Program Files (x86)\Tor Browser\Browser\firefox.exe", "C:\Users\$env:USERNAME\Desktop\Tor Browser\Browser\firefox.exe") }
 )
 
-# --- Web browsers definitions ---
-$webBrowsers = @(
-    @{
-        Name = "Edge"
-        ChocoName = "microsoft-edge"
-        Paths = @(
-            "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-            "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
-        )
-    },
-    @{
-        Name = "Chrome"
-        ChocoName = "googlechrome"
-        Paths = @(
-            "C:\Users\$env:USERNAME\AppData\Local\Google\Chrome\Application\chrome.exe",
-            "C:\Program Files\Google\Chrome\Application\chrome.exe",
-            "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-        )
-    },
-    @{
-        Name = "Brave"
-        ChocoName = "brave"
-        Paths = @(
-            "C:\Users\$env:USERNAME\AppData\Local\BraveSoftware\Brave-Browser\Application\brave.exe",
-            "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe",
-            "C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe"
-        )
-    },
-    @{
-        Name = "Firefox"
-        ChocoName = "firefox"
-        Paths = @(
-            "C:\Program Files\Mozilla Firefox\firefox.exe",
-            "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-        )
-    },
-    @{
-        Name = "Opera GX"
-        ChocoName = "opera-gx"
-        Paths = @(
-            "C:\Users\$env:USERNAME\AppData\Local\Programs\Opera GX\opera.exe"
-        )
-    },
-    @{
-        Name = "Opera"
-        ChocoName = "opera"
-        Paths = @(
-            "C:\Users\$env:USERNAME\AppData\Local\Programs\Opera\opera.exe"
-        )
-    },
-    @{
-        Name = "LibreWolf"
-        ChocoName = "librewolf"
-        Paths = @(
-            "C:\Program Files\LibreWolf\librewolf.exe",
-            "C:\Program Files (x86)\LibreWolf\librewolf.exe"
-        )
-    },
-    @{
-        Name = "Chromium"
-        ChocoName = "chromium"
-        Paths = @(
-            "C:\Program Files\Chromium\Application\chrome.exe",
-            "C:\Program Files (x86)\Chromium\Application\chrome.exe"
-        )
-    },
-    @{
-        Name = "Tor Browser"
-        ChocoName = "tor-browser"
-        Paths = @(
-            "C:\Program Files\Tor Browser\Browser\firefox.exe",
-            "C:\Program Files (x86)\Tor Browser\Browser\firefox.exe",
-            "C:\Users\$env:USERNAME\Desktop\Tor Browser\Browser\firefox.exe"
-        )
-    }
+# Game Launchers
+$gameLaunchers = @(
+    @{ Name = "Steam";             ChocoName = "steam";              Paths = @("C:\Program Files (x86)\Steam\steam.exe") },
+    @{ Name = "Epic Games";        ChocoName = "epicgameslauncher";  Paths = @("C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win32\EpicGamesLauncher.exe", "C:\Program Files\Epic Games\Launcher\Portal\Binaries\Win64\EpicGamesLauncher.exe") },
+    @{ Name = "EA App";            ChocoName = "ea-app";             Paths = @("C:\Program Files\Electronic Arts\EA Desktop\EA Desktop.exe", "C:\Program Files\EA Games\EA Desktop\EA Desktop.exe", "C:\Users\$env:USERNAME\AppData\Local\EADesktop\EA Desktop.exe", "C:\Users\$env:USERNAME\AppData\Roaming\EADesktop\EA Desktop.exe", "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop\EADesktop.exe") },
+    @{ Name = "GOG Galaxy";        ChocoName = "gog-galaxy";         Paths = @("C:\Program Files (x86)\GOG Galaxy\GalaxyClient.exe", "C:\Program Files\GOG Galaxy\GalaxyClient.exe") },
+    @{ Name = "Rockstar Launcher"; ChocoName = "rockstar-launcher";  Paths = @("C:\Program Files\Rockstar Games\Launcher\Launcher.exe", "C:\Program Files (x86)\Rockstar Games\Launcher\Launcher.exe") },
+    @{ Name = "Ubisoft Connect";   ChocoName = "ubisoft-connect";    Paths = @("C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe", "C:\Program Files\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe") }
 )
-# --- End web browsers definitions ---
 
-# --- DDU definition ---
-$dduProgram = @{
-    Name = "Display Driver Uninstaller (DDU)"
-    ChocoName = "display-driver-uninstaller"
-    Paths = @(
-        "C:\Program Files\Display Driver Uninstaller\Display Driver Uninstaller.exe",
-        "C:\Program Files (x86)\Display Driver Uninstaller\Display Driver Uninstaller.exe"
-    )
+# Utilities
+$utilities = @(
+    @{ Name = "Notepad++";     ChocoName = "notepadplusplus"; Paths = @("C:\Program Files\Notepad++\notepad++.exe", "C:\Program Files (x86)\Notepad++\notepad++.exe") },
+    @{ Name = "7zip";          ChocoName = "7zip";            Paths = @("C:\Program Files\7-Zip\7zFM.exe", "C:\Program Files (x86)\7-Zip\7zFM.exe") },
+    @{ Name = "VLC";           ChocoName = "vlc";             Paths = @("C:\Program Files\VideoLAN\VLC\vlc.exe", "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe") },
+    @{ Name = "TranslucentTB"; ChocoName = "translucenttb";   Paths = @("$env:LOCALAPPDATA\Microsoft\WindowsApps\TranslucentTB.exe", "C:\Program Files\TranslucentTB\TranslucentTB.exe", "C:\Program Files (x86)\TranslucentTB\TranslucentTB.exe", "C:\Program Files\WindowsApps\28017CharlesMilette.TranslucentTB_2025.1.0.0_x64__v826wp6bftszj\TranslucentTB.exe") },
+    @{ Name = "Prism Launcher";ChocoName = "prismlauncher";   Paths = @("C:\Program Files\Prism Launcher\prismlauncher.exe", "C:\Program Files (x86)\Prism Launcher\prismlauncher.exe", "C:\Users\$env:USERNAME\AppData\Local\Programs\PrismLauncher\prismlauncher.exe") },
+    @{ Name = "Display Driver Uninstaller (DDU)"; ChocoName = "display-driver-uninstaller"; Paths = @("C:\Program Files\Display Driver Uninstaller\Display Driver Uninstaller.exe", "C:\Program Files (x86)\Display Driver Uninstaller\Display Driver Uninstaller.exe") }
+)
+
+# VPNs
+$vpns = @(
+    @{ Name = "NordVPN";         ChocoName = "nordvpn";         Paths = @("C:\Program Files\NordVPN\NordVPN.exe", "C:\Program Files (x86)\NordVPN\NordVPN.exe") },
+    @{ Name = "ProtonVPN";       ChocoName = "protonvpn";       Paths = @("C:\Program Files\Proton Technologies\ProtonVPN\ProtonVPN.exe", "C:\Program Files (x86)\Proton Technologies\ProtonVPN\ProtonVPN.exe") },
+    @{ Name = "WireGuard";       ChocoName = "wireguard";       Paths = @("C:\Program Files\WireGuard\wireguard.exe", "C:\Program Files (x86)\WireGuard\wireguard.exe") },
+    @{ Name = "OpenVPN";         ChocoName = "openvpn";         Paths = @("C:\Program Files\OpenVPN\bin\openvpn.exe", "C:\Program Files (x86)\OpenVPN\bin\openvpn.exe") },
+    @{ Name = "OpenVPN Connect"; ChocoName = "openvpn-connect"; Paths = @("C:\Program Files\OpenVPN Connect\OpenVPNConnect.exe", "C:\Program Files (x86)\OpenVPN Connect\OpenVPNConnect.exe") },
+    @{ Name = "ExpressVPN";      ChocoName = "expressvpn";      Paths = @("C:\Program Files (x86)\ExpressVPN\expressvpn-ui\ExpressVPN.exe", "C:\Program Files\ExpressVPN\expressvpn-ui\ExpressVPN.exe") },
+    @{ Name = "Mullvad";         ChocoName = "mullvad-vpn";     Paths = @("C:\Program Files\Mullvad VPN\mullvad.exe", "C:\Program Files (x86)\Mullvad VPN\mullvad.exe") }
+)
+
+# Emulators
+$emulators = @(
+    @{ Name = "Dolphin Emulator"; ChocoName = "dolphin"; Paths = @("C:\Program Files\Dolphin\Dolphin.exe", "C:\Program Files (x86)\Dolphin\Dolphin.exe") }
+)
+
+# --- End Software Definitions ---
+
+# --- Selection Logic ---
+function Select-ProgramsFromCategory($categoryName, $programList) {
+    Write-Host "`nWould you like to install any $categoryName?" -ForegroundColor Cyan
+    do {
+        $catPrompt = Read-Host "Install from $categoryName? (Y/N)"
+    } while ($catPrompt -notmatch '^(Y|N)$')
+    $selected = @()
+    if ($catPrompt -eq 'Y') {
+        Write-Host "`nAvailable $categoryName:" -ForegroundColor Cyan
+        for ($i = 0; $i -lt $programList.Count; $i++) {
+            Write-Host "$($i+1). $($programList[$i].Name)"
+        }
+        do {
+            $choice = Read-Host "Enter the number(s) of the $categoryName you want to install (comma separated, e.g. 1,3,5), or 'C' to cancel"
+            if ($choice -match '^[Cc]$') { break }
+            $indices = $choice -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -match '^\d+$' }
+            $valid = $indices.Count -gt 0 -and ($indices | Where-Object { ($_ -as [int]) -ge 1 -and ($_ -as [int]) -le $programList.Count }).Count -eq $indices.Count
+        } while (-not $valid -and $choice -notmatch '^[Cc]$')
+        if ($valid) {
+            foreach ($idx in $indices) {
+                $selected += $programList[[int]$idx - 1]
+            }
+            Write-Host "`nSelected $categoryName:" -ForegroundColor Green
+            foreach ($prog in $selected) { Write-Host "- $($prog.Name)" }
+        }
+    }
+    return $selected
 }
-# --- End DDU definition ---
 
+$programs = @()
+$programs += Select-ProgramsFromCategory "Web Browsers" $browsers
+$programs += Select-ProgramsFromCategory "Game Launchers" $gameLaunchers
+$programs += Select-ProgramsFromCategory "Utilities" $utilities
+$programs += Select-ProgramsFromCategory "VPNs" $vpns
+$programs += Select-ProgramsFromCategory "Emulators" $emulators
+
+if ($programs.Count -eq 0) {
+    Write-Host "`nNo programs selected for installation. Exiting." -ForegroundColor Cyan
+    Write-Host "`nPress Enter to exit..."
+    Read-Host | Out-Null
+    exit 0
+}
+
+# Remove old, redundant definitions
+# --- Web browsers definitions ---
+# --- DDU definition ---
 # --- VPN definitions ---
-$vpnPrograms = @(
-    @{
-        Name = "NordVPN"
-        ChocoName = "nordvpn"
-        Paths = @(
-            "C:\Program Files\NordVPN\NordVPN.exe",
-            "C:\Program Files (x86)\NordVPN\NordVPN.exe"
-        )
-    },
-    @{
-        Name = "ProtonVPN"
-        ChocoName = "protonvpn"
-        Paths = @(
-            "C:\Program Files\Proton Technologies\ProtonVPN\ProtonVPN.exe",
-            "C:\Program Files (x86)\Proton Technologies\ProtonVPN\ProtonVPN.exe"
-        )
-    },
-    @{
-        Name = "WireGuard"
-        ChocoName = "wireguard"
-        Paths = @(
-            "C:\Program Files\WireGuard\wireguard.exe",
-            "C:\Program Files (x86)\WireGuard\wireguard.exe"
-        )
-    },
-    @{
-        Name = "OpenVPN"
-        ChocoName = "openvpn"
-        Paths = @(
-            "C:\Program Files\OpenVPN\bin\openvpn.exe",
-            "C:\Program Files (x86)\OpenVPN\bin\openvpn.exe"
-        )
-    },
-    @{
-        Name = "OpenVPN Connect"
-        ChocoName = "openvpn-connect"
-        Paths = @(
-            "C:\Program Files\OpenVPN Connect\OpenVPNConnect.exe",
-            "C:\Program Files (x86)\OpenVPN Connect\OpenVPNConnect.exe"
-        )
-    },
-    @{
-        Name = "ExpressVPN"
-        ChocoName = "expressvpn"
-        Paths = @(
-            "C:\Program Files (x86)\ExpressVPN\expressvpn-ui\ExpressVPN.exe",
-            "C:\Program Files\ExpressVPN\expressvpn-ui\ExpressVPN.exe"
-        )
-    },
-    @{
-        Name = "Mullvad"
-        ChocoName = "mullvad-vpn"
-        Paths = @(
-            "C:\Program Files\Mullvad VPN\mullvad.exe",
-            "C:\Program Files (x86)\Mullvad VPN\mullvad.exe"
-        )
-    }
-)
-# --- End VPN definitions ---
-
 # --- Extras definitions ---
-$extrasPrograms = @(
-    @{
-        Name = "EA App"
-        ChocoName = "ea-app"
-        Paths = @(
-            "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop.exe",
-            "C:\Program Files\EA Games\EA Desktop\EA Desktop.exe",
-            "C:\Users\$env:USERNAME\AppData\Local\EADesktop\EA Desktop.exe",
-            "C:\Users\$env:USERNAME\AppData\Roaming\EADesktop\EA Desktop.exe",
-            "C:\Program Files\Electronic Arts\EA Desktop\EA Desktop\EADesktop.exe"
-        )
-    },
-    @{
-        Name = "GOG Galaxy"
-        ChocoName = "gog-galaxy"
-        Paths = @(
-            "C:\Program Files (x86)\GOG Galaxy\GalaxyClient.exe",
-            "C:\Program Files\GOG Galaxy\GalaxyClient.exe"
-        )
-    },
-    @{
-        Name = "Rockstar Games Launcher"
-        ChocoName = "rockstar-launcher"
-        Paths = @(
-            "C:\Program Files\Rockstar Games\Launcher\Launcher.exe",
-            "C:\Program Files (x86)\Rockstar Games\Launcher\Launcher.exe"
-        )
-    },
-    @{
-        Name = "Ubisoft Connect"
-        ChocoName = "ubisoft-connect"
-        Paths = @(
-            "C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe",
-            "C:\Program Files\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe"
-        )
-    },
-    @{
-        Name = "Dolphin Emulator"
-        ChocoName = "dolphin"
-        Paths = @(
-            "C:\Program Files\Dolphin\Dolphin.exe",
-            "C:\Program Files (x86)\Dolphin\Dolphin.exe"
-        )
-    }
-)
-# --- End Extras definitions ---
 
 function Is-ChocolateyInstalled {
     return (Get-Command choco.exe -ErrorAction SilentlyContinue) -ne $null
