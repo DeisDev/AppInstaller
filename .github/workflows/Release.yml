@@ -19,14 +19,6 @@ jobs:
           version=$(grep -Po '\$scriptVersion\s*=\s*"\K[^"]+' appinstaller.ps1)
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Generate changelog
-        id: changelog
-        shell: bash
-        run: |
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          git log -n 10 --pretty=format:'- [`%h`](https://github.com/'"$GITHUB_REPOSITORY"'/commit/%H) %s (by %an)' >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
@@ -34,11 +26,6 @@ jobs:
           name: Release ${{ steps.get_version.outputs.version }}
           body: |
             Latest release of the appinstaller.ps1 script.
-
-            ## Changelog (last 10 commits)
-            ${{ steps.changelog.outputs.changelog }}
-
-            _Note: Only the 10 most recent commits are shown. [See more commits here.](https://github.com/DeisDev/AppInstaller/commits/main)_
 
             ## Run without downloading
 
