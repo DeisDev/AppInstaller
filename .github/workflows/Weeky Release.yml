@@ -1,0 +1,58 @@
+name: Weekly Release
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # every Sunday at 00:00 UTC
+  workflow_dispatch:     # allow manual trigger
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Get current version from script
+        id: get_version
+        run: |
+          version=$(grep -Po '\$scriptVersion\s*=\s*"\K[^"]+' appinstaller.ps1)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Set next version (patch bump, keep trailing letter)
+        id: next_version
+        run: |
+          ver="${{ steps.get_version.outputs.version }}"
+          base="${ver%[a-zA-Z]}"
+          letter="${ver##*[0-9.]}"
+          num="${base##*v}"
+          major="$(echo $num | cut -d. -f1)"
+          minor="$(echo $num | cut -d. -f2)"
+          patch="$(echo $num | cut -d. -f3)"
+          patch=$((10#$patch + 1))
+          new_ver="v${major}.${minor}.${patch}${letter}"
+          echo "new_ver=$new_ver" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.next_version.outputs.new_ver }}
+          name: Release ${{ steps.next_version.outputs.new_ver }}
+          body: |
+            Automated weekly release of the latest appinstaller.ps1 script.
+
+            ## Run without downloading
+
+            To run directly from GitHub in an elevated PowerShell prompt:
+
+            ```powershell
+            irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
+            ```
+
+            Or, using `Invoke-WebRequest`:
+
+            ```powershell
+            iwr https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 -UseBasicParsing | iex
+            ```
+          files: appinstaller.ps1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
