@@ -19,18 +19,16 @@ jobs:
           version=$(grep -Po '\$scriptVersion\s*=\s*"\K[^"]+' appinstaller.ps1)
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Generate changelog (base64)
+      - name: Generate changelog
         id: changelog
         shell: bash
         run: |
-          git log -n 10 --pretty=format:'- [`%h`](https://github.com/'"$GITHUB_REPOSITORY"'/commit/%H) %s (by %an)' > changelog.txt
-          changelog_b64=$(base64 -w0 changelog.txt)
-          echo "changelog_b64=$changelog_b64" >> $GITHUB_OUTPUT
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          git log -n 10 --pretty=format:'- [`%h`](https://github.com/'"$GITHUB_REPOSITORY"'/commit/%H) %s (by %an)' >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create release
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.get_version.outputs.version }}
           name: Release ${{ steps.get_version.outputs.version }}
@@ -38,7 +36,7 @@ jobs:
             Latest release of the appinstaller.ps1 script.
 
             ## Changelog (last 10 commits)
-            ${{ fromJson('{"v":"${{ steps.changelog.outputs.changelog_b64 }}" }').v | fromBase64 }}
+            ${{ steps.changelog.outputs.changelog }}
 
             _Note: Only the 10 most recent commits are shown. [See more commits here.](https://github.com/DeisDev/AppInstaller/commits/main)_
 
@@ -56,3 +54,5 @@ jobs:
             iwr https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 -UseBasicParsing | iex
             ```
           files: appinstaller.ps1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
