@@ -29,13 +29,13 @@ jobs:
           name: Pre-release ${{ steps.get_version.outputs.version_pre }}
           prerelease: true
           body: |
-            > [!WARNING] **This is an automated daily pre-release and may not function correctly!**
+            **This is an automated daily pre-release and may not function correctly!**
             
             These builds are for testing and validation. Use the [weekly release](https://github.com/DeisDev/AppInstaller/releases) for stable usage.
 
             ## Run without downloading
 
-            > [!TIP] To run directly from GitHub in an elevated PowerShell prompt:
+            To run directly from GitHub in an elevated PowerShell prompt:
 
             ```powershell
             irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex

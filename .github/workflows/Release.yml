@@ -29,7 +29,7 @@ jobs:
 
             ## Run without downloading
 
-            > [!TIP] To run directly from GitHub in an elevated PowerShell prompt:
+            To run directly from GitHub in an elevated PowerShell prompt:
 
             ```powershell
             irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
