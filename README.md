@@ -13,7 +13,7 @@ A **very simple PowerShell script** that checks for and installs programs using 
 - Checks if specified programs are installed
 - Installs missing programs automatically via Chocolatey
 - **Auto-update:** Always fetches and runs the latest version of the script from GitHub if run locally
-- Interactive selection for browsers, VPNs, and optional tools
+- Interactive selection for browsers, VPNs, and optional tools (by category)
 - Easy to customize for your own needs
 
 ---
@@ -71,34 +71,47 @@ The script currently checks for and can install the following programs:
 - Chromium
 - Tor Browser
 
-**Gaming:**
+**Game Launchers:**
 - Steam
 - Epic Games Launcher
-- Prism Launcher
-
-**Media:**
-- VLC
-
-**Utilities:**
-- 7zip
-- TranslucentTB
-- Display Driver Uninstaller (DDU)
-
-**VPNs:**
-  - NordVPN
-  - ProtonVPN
-  - WireGuard
-  - OpenVPN
-  - OpenVPN Connect
-  - ExpressVPN
-  - Mullvad
-
-**Extras:**
 - EA App
 - GOG Galaxy
 - Rockstar Games Launcher
 - Ubisoft Connect
+- Prism Launcher
+
+**Emulators:**
 - Dolphin Emulator
+
+**Utilities:**
+- 7zip
+- WinRAR
+- Bulk Crap Uninstaller
+- GIMP
+- JDownloader2
+- HWInfo
+- Process Hacker
+- CrystalDiskInfo
+- GPU-Z
+- OBS Studio
+- TranslucentTB
+- Display Driver Uninstaller (DDU)
+- VLC
+
+**VPNs:**
+- NordVPN
+- ProtonVPN
+- WireGuard
+- OpenVPN
+- OpenVPN Connect
+- ExpressVPN
+- Mullvad
+
+**Torrents:**
+- qBittorrent
+
+**Benchmarks:**
+- FurMark
 
 ---
 

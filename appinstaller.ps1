@@ -1,4 +1,4 @@
-$scriptVersion = "v0.3.6a"
+$scriptVersion = "v0.3.7a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
