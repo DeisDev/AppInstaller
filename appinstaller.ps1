@@ -1,4 +1,4 @@
-$scriptVersion = "v0.3.8a"
+$scriptVersion = "v0.3.9a"
 Write-Host "=============================================" -ForegroundColor DarkGray
 Write-Host "AppInstaller by DeisDev" -ForegroundColor Cyan
 Write-Host $scriptVersion -ForegroundColor DarkGray
@@ -200,6 +200,12 @@ $emulators = @(
     @{ Name = "Dolphin Emulator"; ChocoName = "dolphin"; Paths = @("C:\Program Files\Dolphin\Dolphin.exe", "C:\Program Files (x86)\Dolphin\Dolphin.exe") }
 )
 
+# Chat & Voice
+$chatVoice = @(
+    @{ Name = "Discord";   ChocoName = "discord";   Paths = @("C:\Users\$env:USERNAME\AppData\Local\Discord\Update.exe", "C:\Program Files\Discord\Discord.exe", "C:\Program Files (x86)\Discord\Discord.exe") },
+    @{ Name = "TeamSpeak"; ChocoName = "teamspeak"; Paths = @("C:\Program Files\TeamSpeak 3 Client\ts3client_win64.exe", "C:\Program Files (x86)\TeamSpeak 3 Client\ts3client_win32.exe") }
+)
+
 # --- End Software Definitions ---
 
 # --- Selection Logic ---
@@ -240,6 +246,7 @@ $programs += Select-ProgramsFromCategory "VPNs" $vpns
 $programs += Select-ProgramsFromCategory "Emulators" $emulators
 $programs += Select-ProgramsFromCategory "Torrents" $torrents
 $programs += Select-ProgramsFromCategory "Benchmarks" $benchmarks
+$programs += Select-ProgramsFromCategory "Chat & Voice" $chatVoice
 
 if ($programs.Count -eq 0) {
     Write-Host "`nNo programs selected for installation. Exiting." -ForegroundColor Cyan
