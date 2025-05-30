@@ -25,21 +25,9 @@ jobs:
           tag_name: ${{ steps.get_version.outputs.version }}
           name: Release ${{ steps.get_version.outputs.version }}
           body: |
-            Latest release of the appinstaller.ps1 script.
+            This is release ${{ steps.get_version.outputs.version }} of the appinstaller.ps1 script.
 
-            ## Run without downloading
-
-            To run directly from GitHub in an elevated PowerShell prompt:
-
-            ```powershell
-            irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
-            ```
-
-            Or, using `Invoke-WebRequest`:
-
-            ```powershell
-            iwr https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 -UseBasicParsing | iex
-            ```
+            See the repository for usage instructions and details.
           files: appinstaller.ps1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
