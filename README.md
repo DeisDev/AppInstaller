@@ -43,7 +43,7 @@ A **simple, interactive PowerShell script** for quickly setting up a new Windows
    ```powershell
    .\AppInstaller.ps1
    ```
-   **Or run directly from GitHub (no download needed):**
+   > [!TIP] **You can always run the latest version of the script directly from GitHub (no download needed):**
    ```powershell
    irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
    ```
@@ -129,14 +129,6 @@ Each entry defines the program name, Chocolatey package name, and common install
 - FurMark
 
 </details>
-
----
-
-> [!TIP]
-> - **Daily pre-releases** are published automatically with the latest changes for testing and feedback.
-> - **Stable releases** are published less frequently and are recommended for most users.
->
-> You can always fetch the latest version directly from GitHub using the command in the Usage section.
 
 ---
 
