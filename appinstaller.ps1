@@ -247,13 +247,7 @@ if ($programs.Count -eq 0) {
     Read-Host | Out-Null
     exit 0
 }
-
-# Remove old, redundant definitions
-# --- Web browsers definitions ---
-# --- DDU definition ---
-# --- VPN definitions ---
-# --- Extras definitions ---
-
+# --- End Selection Logic ---
 function Is-ChocolateyInstalled {
     return (Get-Command choco.exe -ErrorAction SilentlyContinue) -ne $null
 }
