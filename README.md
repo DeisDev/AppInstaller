@@ -43,7 +43,8 @@ A **simple, interactive PowerShell script** for quickly setting up a new Windows
    ```powershell
    .\AppInstaller.ps1
    ```
-> [!TIP] **You can always run the latest version of the script directly from GitHub (no download needed):**
+> [!TIP]
+> **You can always run the latest version of the script directly from GitHub (no download needed):**
    ```powershell
    irm https://raw.githubusercontent.com/DeisDev/AppInstaller/main/appinstaller.ps1 | iex
    ```
